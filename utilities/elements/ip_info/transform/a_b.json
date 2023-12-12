@@ -1,0 +1,49 @@
+{
+    "id": "organize",
+    "options": {
+      "excludeByName": {
+        "Time": true
+      },
+      "indexByName": {
+        "Time": 0,
+        "ip_a": 1,
+        "ip_b": 2,
+        "hosts_group_a": 3,
+        "hosts_group_b": 4,
+        "custom_application_a": 5,
+        "custom_application_b": 6,
+        "tls_domain_a": 7,
+        "tls_domain_b": 8,
+        "cname_domain_a": 9,
+        "cname_domain_b": 10,
+        "rdns_domain_a": 11,
+        "rdns_domain_b": 12,
+        "ip_type_a": 13,
+        "ip_type_b": 14,
+        "country_a": 15,
+        "country_b": 16,
+        "city_a": 17,
+        "city_b": 18
+      },
+      "renameByName": {
+        "ip_a": "",
+        "ip_b": "",
+        "hosts_group_a": "Hosts Group A",
+        "hosts_group_b": "Hosts Group B",
+        "custom_application_a": "Application A",
+        "custom_application_b": "Application B",
+        "tls_domain_a": "SNI Name A",
+        "tls_domain_b": "SNI Name B",
+        "cname_domain_a": "Canonical Name A",
+        "cname_domain_b": "Canonical Name B",
+        "rdns_domain_a": "Reverse DNS A",
+        "rdns_domain_b": "Reverse DNS B",
+        "ip_type_a": "IP Type A",
+        "ip_type_b": "IP Type B",
+        "country_a": "Country A",
+        "country_b": "Country B",
+        "city_a": "City A",
+        "city_b": "City B"
+      }
+    }
+  }

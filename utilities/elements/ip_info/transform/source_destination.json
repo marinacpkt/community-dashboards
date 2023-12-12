@@ -1,0 +1,50 @@
+{
+    "id": "organize",
+    "options": {
+      "excludeByName": {
+        "Time": true
+      },
+      "indexByName": {
+        "Time": 0,
+        "source_ip": 1,
+        "destination_ip": 2,
+        "source_hosts_group": 3,
+        "destination_hosts_group": 4,
+        "source_custom_application": 5,
+        "destination_custom_application": 6,
+        "source_tls_domain": 7,
+        "destination_tls_domain": 8,
+        "source_cname_domain": 9,
+        "destination_cname_domain": 10,
+        "source_rdns_domain": 11,
+        "destination_rdns_domain": 12,
+        "source_ip_type": 13,
+        "destination_ip_type": 14,
+        "source_country": 15,
+        "destination_country": 16,
+        "source_city": 17,
+        "destination_city": 18
+      },
+      "renameByName": {
+        "source_ip": "Source IP",
+        "destination_ip": "Destination IP",
+        "source_hosts_group": "Source Hosts Group",
+        "destination_hosts_group": "Destination Hosts Group",
+        "source_custom_application": "Source Application",
+        "destination_custom_application": "Destination Application",
+        "source_tls_domain": "Source SNI Name",
+        "destination_tls_domain": "Destination SNI Name",
+        "source_cname_domain": "Source Canonical Name",
+        "destination_cname_domain": "Destination Canonical Name",
+        "source_rdns_domain": "Source Reverse DNS",
+        "destination_rdns_domain": "Destination Reverse DNS",
+        "source_ip_type": "Source IP Type",
+        "destination_ip_type": "Destination IP Type",
+        "source_country": "Source Country",
+        "destination_country": "Destination Country",
+        "source_city": "Source City",
+        "destination_city": "Destination City"
+      }
+    }
+  }
+  

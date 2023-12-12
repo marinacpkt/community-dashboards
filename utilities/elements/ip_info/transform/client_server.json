@@ -1,0 +1,49 @@
+{
+  "id": "organize",
+  "options": {
+    "excludeByName": {
+      "Time": true
+    },
+    "indexByName": {
+      "Time": 0,
+      "client_ip": 1,
+      "server_ip": 2,
+      "client_hosts_group": 3,
+      "server_hosts_group": 4,
+      "client_custom_application": 5,
+      "server_custom_application": 6,
+      "client_tls_domain": 7,
+      "server_tls_domain": 8,
+      "client_cname_domain": 9,
+      "server_cname_domain": 10,
+      "client_rdns_domain": 11,
+      "server_rdns_domain": 12,
+      "client_ip_type": 13,
+      "server_ip_type": 14,
+      "client_country": 15,
+      "server_country": 16,
+      "client_city": 17,
+      "server_city": 18
+    },
+    "renameByName": {
+      "client_ip": "Client IP",
+      "server_ip": "Server IP",
+      "client_hosts_group": "Client Hosts Group",
+      "server_hosts_group": "Server Hosts Group",
+      "client_custom_application": "Client Application",
+      "server_custom_application": "Server Application",
+      "client_tls_domain": "Client SNI Name",
+      "server_tls_domain": "Server SNI Name",
+      "client_cname_domain": "Client Canonical Name",
+      "server_cname_domain": "Server Canonical Name",
+      "client_rdns_domain": "Client Reverse DNS",
+      "server_rdns_domain": "Server Reverse DNS",
+      "client_ip_type": "Client IP Type",
+      "server_ip_type": "Server IP Type",
+      "client_country": "Client Country",
+      "server_country": "Server Country",
+      "client_city": "Client City",
+      "server_city": "Server City"
+    }
+  }
+}

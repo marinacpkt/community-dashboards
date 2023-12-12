@@ -1,0 +1,220 @@
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "hosts_group"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for Hosts Group \"${__data.fields.hosts_group}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Hosts Group﻿&var-category_value=${__data.fields.hosts_group}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "custom_application"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for Custom Application \"${__data.fields.custom_application}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Custom Application﻿&var-category_value=${__data.fields.custom_application}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "tls_domain"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for SNI Name \"${__data.fields.tls_domain}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿SNI Name﻿&var-category_value=${__data.fields.tls_domain}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "cname_domain"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for Canonical Name \"${__data.fields.cname_domain}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Canonical Name﻿&var-category_value=${__data.fields.cname_domain}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "endpoint_application"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for Endpoint Application \"${__data.fields.endpoint_application}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Endpoint Application﻿&var-category_value=${__data.fields.endpoint_application}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "external_nat"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for External Nat \"${__data.fields.country}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿External Nat﻿&var-category_value=${__data.fields.external_nat}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "ip_type"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for IP Type \"${__data.fields.ip_type}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿IP Type﻿&var-category_value=${__data.fields.ip_type}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "rdns_domain"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for Reverse DNS \"${__data.fields.rdns_domain}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Reverse DNS﻿&var-category_value=${__data.fields.rdns_domain}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "country"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for Country \"${__data.fields.country}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Country﻿&var-category_value=${__data.fields.country}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    },
+    {
+      "matcher": {
+        "id": "byName",
+        "options": "city"
+      },
+      "properties": [
+        {
+          "id": "links",
+          "value": [
+            {
+             "targetBlank": false,
+              "title": "IPs for City \"${__data.fields.city}\"",
+              "url": "/graph-engine/d/flow_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿City﻿&var-category_value=${__data.fields.city}&var-flow_metric=${flow_metric:text}﻿&${__url_time_range}"
+            }
+          ]
+        },
+        {
+          "id": "custom.filterable",
+          "value": true
+        }
+      ]
+    }

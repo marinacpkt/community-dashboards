@@ -1,0 +1,3121 @@
+{
+    "variables": {
+        "cstor_name": {
+            "current": {
+              "selected": false,
+              "text": "cstor30s_95",
+              "value": "cstor30s_95"
+            },
+            "datasource": {
+              "type": "influxdb",
+              "uid": "tcp"
+            },
+            "definition": "",
+            "hide": 0,
+            "includeAll": false,
+            "label": "cStor",
+            "multi": false,
+            "name": "cstor_name",
+            "options": [],
+            "query": "SHOW TAG VALUES FROM \"tcp_timeslice_summary_application_port\" with KEY = \"cstor_name\"",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+        "cstor_ip": {
+            "current": {
+                "selected": false,
+                "text": "",
+                "value": ""
+            },
+            "datasource": {
+                "type": "influxdb",
+                "uid": "tcp"
+            },
+            "definition": "",
+            "hide": 0,
+            "includeAll": false,
+            "label": "cStor IP",
+            "multi": false,
+            "name": "cstor_ip",
+            "options": [],
+            "query": "SHOW TAG VALUES FROM \"tcp_timeslice_summary_application_port\" with KEY = \"cstor_ip\" where \"cstor_name\" =~ /^$cstor_name$/",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+        },
+        "network_monitor": {
+            "current": {
+              "selected": false,
+              "text": "",
+              "value": ""
+            },
+            "datasource": {
+              "type": "influxdb",
+              "uid": "tcp"
+            },
+            "definition": "",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Network Monitor",
+            "multi": false,
+            "name": "network_monitor",
+            "options": [],
+            "query": "SHOW TAG VALUES FROM \"tcp_timeslice_summary_application_port\" with KEY = \"network_monitor_name\" WHERE \"cstor_name\"=~ /^$cstor_name$/",
+            "refresh": 1,
+            "regex": "/.*(?<!on_demand)$/",
+            "skipUrlSync": false,
+            "sort": 0,
+            "tagValuesQuery": "",
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+        "ipa": {
+            "current": {
+                "selected": false,
+                "text": "",
+                "value": ""
+            },
+            "description": "Match beginning: ^; Match ending: $; List: |, Match all: empty, ., or .*",
+            "hide": 0,
+            "label": "ipA *",
+            "name": "ipa",
+            "options": [
+                {
+                    "selected": true,
+                    "text": "",
+                    "value": ""
+                }
+            ],
+            "query": "",
+            "skipUrlSync": false,
+            "type": "textbox"
+        },
+        "resolution": {
+            "auto": true,
+            "auto_count": "50",
+            "auto_min": "1s",
+            "current": {
+                "selected": false,
+                "text": "10s",
+                "value": "10s"
+            },
+            "hide": 2,
+            "label": "Resolution",
+            "name": "resolution",
+            "options": [
+                {
+                    "selected": false,
+                    "text": "auto",
+                    "value": "$__auto_interval_resolution"
+                },
+                {
+                    "selected": false,
+                    "text": "1s",
+                    "value": "1s"
+                },
+                {
+                    "selected": true,
+                    "text": "10s",
+                    "value": "10s"
+                },
+                {
+                    "selected": false,
+                    "text": "1m",
+                    "value": "1m"
+                },
+                {
+                    "selected": false,
+                    "text": "10m",
+                    "value": "10m"
+                },
+                {
+                    "selected": false,
+                    "text": "30m",
+                    "value": "30m"
+                },
+                {
+                    "selected": false,
+                    "text": "1h",
+                    "value": "1h"
+                },
+                {
+                    "selected": false,
+                    "text": "6h",
+                    "value": "6h"
+                },
+                {
+                    "selected": false,
+                    "text": "12h",
+                    "value": "12h"
+                },
+                {
+                    "selected": false,
+                    "text": "1d",
+                    "value": "1d"
+                },
+                {
+                    "selected": false,
+                    "text": "7d",
+                    "value": "7d"
+                },
+                {
+                    "selected": false,
+                    "text": "14d",
+                    "value": "14d"
+                },
+                {
+                    "selected": false,
+                    "text": "30d",
+                    "value": "30d"
+                }
+            ],
+            "query": "1s,10s,1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+            "queryValue": "",
+            "refresh": 2,
+            "skipUrlSync": false,
+            "type": "interval"
+        }
+    },
+    "graph": {},
+    "table": {},
+    "flow_example": {
+        "flow_metric_graph_variable": {
+            "current": {
+                "selected": false,
+                "text": "Throughput",
+                "value": "8000*sum(\"bytes\")/$__interval_ms"
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Graph metrics:",
+            "multi": true,
+            "name": "flow_metric",
+            "options": [
+                {
+                    "selected": false,
+                    "text": "All",
+                    "value": "$__all"
+                },
+                {
+                    "selected": true,
+                    "text": "Throughput",
+                    "value": "8000*sum(\"bytes\")/$__interval_ms"
+                },
+                {
+                    "selected": false,
+                    "text": "Bytes",
+                    "value": "sum(\"bytes\")"
+                },
+                {
+                    "selected": false,
+                    "text": "Packets",
+                    "value": "sum(\"packets\")"
+                },
+                {
+                    "selected": false,
+                    "text": "Flows",
+                    "value": "max(\"flows\")"
+                },
+                {
+                    "selected": false,
+                    "text": "Fragments",
+                    "value": "sum(\"fragments\")"
+                },
+                {
+                    "selected": false,
+                    "text": "MTU",
+                    "value": "max(\"max_mtu\")"
+                }
+            ],
+            "query": "Bytes : sum(\"bytes\"), Throughput : 8000*sum(\"bytes\")/$__interval_ms, Packets : sum(\"packets\"), Flows : max(\"flows\"), Fragments : sum(\"fragments\"), MTU : max(\"max_mtu\")",
+            "queryValue": "",
+            "skipUrlSync": false,
+            "type": "custom"
+        },
+        "flow_metric_table_variable": {
+            "current": {
+                "selected": true,
+                "text": [
+                    "Bytes",
+                    "Fragments"
+                ],
+                "value": [
+                    "sum(\"bytes\") as \"Bytes\", sum(\"bytes_a\") as \"Bytes A->B\", sum(\"bytes_b\") as \"Bytes B->A\"",
+                    "sum(\"fragments\") as \"Fragments\", sum(\"fragments_a\") as \"Fragments A->B\", sum(\"fragments_b\") as \"Fragments B->A\""
+                ]
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Table metrics:",
+            "multi": true,
+            "name": "flow_metric_table",
+            "options": [
+                {
+                    "selected": false,
+                    "text": "All",
+                    "value": "$__all"
+                },
+                {
+                    "selected": false,
+                    "text": "Throughput",
+                    "value": "8*sum(\"bytes\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput\", 8*sum(\"bytes_a\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput A->B\", 8*sum(\"bytes_b\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput B->A\""
+                },
+                {
+                    "selected": true,
+                    "text": "Bytes",
+                    "value": "sum(\"bytes\") as \"Bytes\", sum(\"bytes_a\") as \"Bytes A->B\", sum(\"bytes_b\") as \"Bytes B->A\""
+                },
+                {
+                    "selected": false,
+                    "text": "Packets",
+                    "value": "sum(\"packets\") as \"Packets\", sum(\"packets_a\") as \"Packets A->B\", sum(\"packets_b\") as \"Packets B->A\""
+                },
+                {
+                    "selected": true,
+                    "text": "Fragments",
+                    "value": "sum(\"fragments\") as \"Fragments\", sum(\"fragments_a\") as \"Fragments A->B\", sum(\"fragments_b\") as \"Fragments B->A\""
+                },
+                {
+                    "selected": false,
+                    "text": "Flows",
+                    "value": "max(\"flows\") as \"Flows\",max(\"flows_a\") as \"Flows A->B\",max(\"flows_b\") as \"Flows B->A\""
+                },
+                {
+                    "selected": false,
+                    "text": "MTU",
+                    "value": "Max(\"max_mtu\") as \"MTU\",max(\"max_mtu_a\") as \"MTU A->B\", max(\"max_mtu_b\") as \"MTU B->A\""
+                }
+            ],
+            "query": "Throughput : 8*sum(\"bytes\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput\"\\, 8*sum(\"bytes_a\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput A->B\"\\, 8*sum(\"bytes_b\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput B->A\", Bytes : sum(\"bytes\") as \"Bytes\"\\, sum(\"bytes_a\") as \"Bytes A->B\"\\, sum(\"bytes_b\") as \"Bytes B->A\", Packets : sum(\"packets\") as \"Packets\"\\, sum(\"packets_a\") as \"Packets A->B\"\\, sum(\"packets_b\") as \"Packets B->A\",  Fragments :  sum(\"fragments\") as \"Fragments\"\\, sum(\"fragments_a\") as \"Fragments A->B\"\\, sum(\"fragments_b\") as \"Fragments B->A\", Flows : max(\"flows\") as \"Flows\"\\,max(\"flows_a\") as \"Flows A->B\"\\,max(\"flows_b\") as \"Flows B->A\", MTU : Max(\"max_mtu\") as \"MTU\"\\,max(\"max_mtu_a\") as \"MTU A->B\"\\, max(\"max_mtu_b\") as \"MTU B->A\"",
+            "queryValue": "",
+            "skipUrlSync": false,
+            "type": "custom"
+        },
+        "flow_conversation_ip_info": {
+            "current": {
+                "selected": true,
+                "text": [
+                    "IP Protocol",
+                    "Hosts Group",
+                    "Custom Application"
+                ],
+                "value": [
+                    "ip_protocol_name",
+                    "hosts_group_a,hosts_group_b",
+                    "custom_application_a,custom_application_b"
+                ]
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Show IP Info: ",
+            "multi": true,
+            "name": "ip_info",
+            "options": [
+                {
+                    "selected": true,
+                    "text": "All",
+                    "value": "$__all"
+                },
+                {
+                    "selected": false,
+                    "text": "Outer VLAN",
+                    "value": "vlan_tag_outer"
+                },
+                {
+                    "selected": false,
+                    "text": "Inner VLAN",
+                    "value": "vlan_tag_inner"
+                },
+                {
+                    "selected": false,
+                    "text": "IP Protocol",
+                    "value": "ip_protocol_name"
+                },
+                {
+                    "selected": false,
+                    "text": "Network Application",
+                    "value": "application_port"
+                },
+                {
+                    "selected": false,
+                    "text": "Hosts Group",
+                    "value": "hosts_group_a,hosts_group_b"
+                },
+                {
+                    "selected": false,
+                    "text": "Custom Application",
+                    "value": "custom_application_a,custom_application_b"
+                },
+                {
+                    "selected": false,
+                    "text": "IP Type",
+                    "value": "ip_type_a,ip_type_b"
+                },
+                {
+                    "selected": false,
+                    "text": "SNI Name",
+                    "value": "tls_domain_a,tls_domain_b"
+                },
+                {
+                    "selected": false,
+                    "text": "Canonical Name",
+                    "value": "cname_domain_a,cname_domain_b"
+                },
+                {
+                    "selected": false,
+                    "text": "Reverse DNS",
+                    "value": "rdns_domain_a,rdns_domain_b"
+                },
+                {
+                    "selected": false,
+                    "text": "Country",
+                    "value": "country_a,country_b"
+                },
+                {
+                    "selected": false,
+                    "text": "City",
+                    "value": "city_a,city_b"
+                }
+            ],
+            "query": "Outer VLAN : vlan_tag_outer, Inner VLAN : vlan_tag_inner, IP Protocol : ip_protocol_name, Network Application : application_port, Hosts Group : hosts_group_a\\,hosts_group_b, Custom Application : custom_application_a\\,custom_application_b, IP Type : ip_type_a\\,ip_type_b, SNI Name : tls_domain_a\\,tls_domain_b, Canonical Name : cname_domain_a\\,cname_domain_b, Reverse DNS : rdns_domain_a\\,rdns_domain_b, Country : country_a\\,country_b, City : city_a\\,city_b",
+            "queryValue": "",
+            "skipUrlSync": false,
+            "type": "custom"
+        },
+        "flow_graph": {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": {
+                "type": "influxdb",
+                "uid": "flows"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "smooth",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "locale"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Bytes/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "decbytes"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/MTU/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/.*\\/s/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "/s"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "fill": 0,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 6
+            },
+            "hiddenSeries": false,
+            "id": 119,
+            "interval": "10s",
+            "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": false,
+                "hideEmpty": true,
+                "hideZero": true,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "sort": "avg",
+                "sortDesc": true,
+                "total": true,
+                "values": true
+            },
+            "lines": true,
+            "linewidth": 1,
+            "maxDataPoints": 60,
+            "nullPointMode": "null",
+            "options": {
+                "alertThreshold": true,
+                "legend": {
+                    "calcs": [
+                        "mean",
+                        "sum"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "sortBy": "Mean",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "desc"
+                }
+            },
+            "percentage": false,
+            "pluginVersion": "9.2.13",
+            "pointradius": 0.5,
+            "points": false,
+            "renderer": "flot",
+            "repeat": "flow_metric",
+            "repeatDirection": "v",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": true,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "alias": "$col - $tag_ip",
+                    "datasource": "flows",
+                    "groupBy": [
+                        {
+                            "params": [
+                                "1s"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "cstor_name"
+                            ],
+                            "type": "tag"
+                        },
+                        {
+                            "params": [
+                                "network_monitor_name"
+                            ],
+                            "type": "tag"
+                        },
+                        {
+                            "params": [
+                                "none"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "measurement": "flows_summary_vlan_tag_outer",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT ${flow_metric:raw} FROM \"flows_summary_ip\" WHERE  (\"ip\" =~/$tag/) AND (\"${filter1:raw}\" =~ /^${filter1_value}$/) AND (\"${filter2:raw}\" =~ /^${filter2_value}$/) AND (\"${filter3:raw}\" =~ /^${filter3_value}$/) AND (\"ip\" !~ /$singleton_ips/ ${singleton_filter:raw} true) and $timeFilter GROUP BY time($interval), \"ip\" fill(none)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "bytes"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "sum"
+                            },
+                            {
+                                "params": [
+                                    " *8"
+                                ],
+                                "type": "math"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "thresholds": [],
+            "timeRegions": [],
+            "title": "IP Summary - ${flow_metric:text}",
+            "tooltip": {
+                "shared": true,
+                "sort": 2,
+                "value_type": "individual"
+            },
+            "type": "timeseries",
+            "xaxis": {
+                "mode": "time",
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "$$hashKey": "object:968",
+                    "format": "bps",
+                    "logBase": 1,
+                    "show": true
+                },
+                {
+                    "$$hashKey": "object:969",
+                    "format": "short",
+                    "logBase": 1,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false
+            }
+        },
+        "flows_table": {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "flows"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "filterable": false,
+                        "inspect": true
+                    },
+                    "mappings": [],
+                    "noValue": "-",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "locale",
+                    "decimals": 0
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Byte/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "decbytes"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 2
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 2
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byType",
+                            "options": "string"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": true,
+                                        "title": "Follow conversations with IP \"${__data.fields.ip}\"",
+                                        "url": "/graph-engine/d/flow_ip_conversations/?var-cstor_name=.*﻿&var-network_monitor=﻿.*﻿&var-resolution=﻿${resolution}&var-ipa=﻿${__data.fields.ip}﻿&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "displayName",
+                                "value": "IP"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "cstor_name"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for cStor \"${__data.fields.cstor_name}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=cstor_name&var-filter1_value=﻿${__data.fields.cstor_name}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "network_monitor_name"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Network Monitor \"${__data.fields.network_monitor_name}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=network_monitor_name&var-filter1_value=﻿${__data.fields.network_monitor_name}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip_protocol_name"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Protocol \"${__data.fields.ip_protocol_name}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=ip_protocol_name&var-filter1_value=﻿${__data.fields.ip_protocol_name}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "hosts_group"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Hosts Group \"${__data.fields.hosts_group}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=hosts_group﻿&var-filter1_value=﻿${__data.fields.hosts_group}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "custom_application"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Custom Application \"${__data.fields.custom_application}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=custom_application&var-filter1_value=﻿${__data.fields.custom_application}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "tls_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for SNI Name \"${__data.fields.tls_domain}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=tls_domain&var-filter1_value=﻿${__data.fields.tls_domain}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "cname_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Canonical Name \"${__data.fields.cname_domain}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=cname_domain&var-filter1_value=﻿${__data.fields.cname_domain}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "endpoint_application"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Endpoint Application \"${__data.fields.endpoint_application}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=endpoint_application&var-filter1_value=﻿${__data.fields.endpoint_application}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "external_nat"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for External Nat \"${__data.fields.country}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=country&var-filter1_value=﻿${__data.fields.country}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip_type"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for IP Type \"${__data.fields.ip_type}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=ip_type&var-filter1_value=﻿${__data.fields.ip_type}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "rdns_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Reverse DNS \"${__data.fields.rdns_domain}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=rdns_domain&var-filter1_value=﻿${__data.fields.rdns_domain}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "country"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Country \"${__data.fields.country}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=country&var-filter1_value=﻿${__data.fields.country}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "city"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for City \"${__data.fields.city}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=city&var-filter1_value=﻿${__data.fields.city}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "vlan_tag_outer"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Outer VLAN \"${__data.fields.vlan_tag_outer}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=vlan_tag_outer&var-filter1_value=﻿${__data.fields.vlan_tag_outer}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "vlan_tag_inner"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Inner VLAN \"${__data.fields.vlan_tag_inner}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=vlan_tag_inner&var-filter1_value=﻿${__data.fields.vlan_tag_inner}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "application_port"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for a Network Application \"${__data.fields.application_port}\"",
+                                        "url": "/graph-engine/d/ip_summary_flows/?var-filter1=application_port&var-filter1_value=﻿${__data.fields.application_port}﻿&var-filter1=${filter2:raw}﻿&var-filter2_value=﻿All&var-filter3=${filter3:raw}﻿&var-filter3_value=﻿All&var-resolution=﻿${resolution}&var-flow_metric=Throughput﻿&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 15,
+                "w": 24,
+                "x": 0,
+                "y": 13
+            },
+            "id": 122,
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "enablePagination": true,
+                    "fields": [
+                        "Bytes",
+                        "Packets",
+                        "Fragments",
+                        "Throughput Rx",
+                        "Throughput Tx",
+                        "Bytes Rx",
+                        "Bytes Tx",
+                        "Packets Rx",
+                        "Throughput",
+                        "Packets Tx",
+                        "Flows Rx",
+                        "Flows Tx",
+                        "Fragments Rx",
+                        "Fragments Tx"
+                    ],
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": true
+                },
+                "frameIndex": 1,
+                "showHeader": true,
+                "sortBy": [
+                    {
+                        "desc": true,
+                        "displayName": "Fragments Rx"
+                    }
+                ]
+            },
+            "pluginVersion": "9.5.6",
+            "targets": [
+                {
+                    "datasource": "flows",
+                    "groupBy": [
+                        {
+                            "params": [
+                                "$__interval"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "null"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "hide": false,
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "  SELECT ${flow_metric_table:raw} FROM \"flows_summary_ip\" WHERE  (\"ip\" =~ /$tag/) AND (\"${filter1:raw}\" =~ /^${filter1_value}$/) AND (\"${filter2:raw}\" =~ /^${filter2_value}$/) AND (\"${filter3:raw}\" =~ /^${filter3_value}$/)  AND (\"ip\" !~ /$singleton_ips/ ${singleton_filter:raw} true) AND $timeFilter GROUP BY  \"ip\", ${ip_info:raw}  fill(none)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "table",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "value"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "title": "Summary IP (Filter: ${filter1:text}, ${filter2:text} and regex IP)",
+            "transformations": [
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true
+                        },
+                        "indexByName": {
+                            "Throughput": 16,
+                            "Bytes": 17,
+                            "Packets": 18,
+                            "Fragments": 19,
+                            "Throughput Rx": 20,
+                            "Bytes Rx": 21,
+                            "Packets Rx": 22,
+                            "Fragments Rx": 23,
+                            "Flows Rx": 24,
+                            "MTU Rx": 25,
+                            "Throughput Tx": 26,
+                            "Bytes Tx": 27,
+                            "Packets Tx": 28,
+                            "Fragments Tx": 29,
+                            "Flows Tx": 30,
+                            "MTU Tx": 31,
+                            "Time": 0,
+                            "application_port": 7,
+                            "city": 15,
+                            "cname_domain": 11,
+                            "country": 14,
+                            "cstor_name": 2,
+                            "custom_application": 9,
+                            "hosts_group": 8,
+                            "ip": 1,
+                            "ip_protocol_name": 6,
+                            "ip_type": 13,
+                            "network_monitor_name": 3,
+                            "rdns_domain": 12,
+                            "tls_domain": 10,
+                            "vlan_tag_inner": 5,
+                            "vlan_tag_outer": 4
+                        },
+                        "renameByName": {
+                            "application_port": "Network Application",
+                            "city": "City",
+                            "cname_domain": "Canonical Name",
+                            "country": "Country",
+                            "cstor_name": "cStor",
+                            "custom_application": "Custom Application",
+                            "hosts_group": "Hosts Group",
+                            "ip": "",
+                            "ip_protocol_name": "IP Protocol",
+                            "ip_type": "IP Type",
+                            "network_monitor_name": "Network Monitor",
+                            "rdns_domain": "Reverse DNS",
+                            "tls_domain": "SNI Name",
+                            "vlan_tag_inner": "Inner VLAN",
+                            "vlan_tag_outer": "Outer VLAN"
+                        }
+                    }
+                }
+            ],
+            "type": "table"
+        }
+    },
+    "tcp_example": {
+        "tcp_metric_graph_variable": {
+            "current": {
+                "selected": true,
+                "text": "Throughput",
+                "value": "8000*(SUM(\"bytes_server\")+SUM(\"bytes_client\"))/$__interval_ms as \"Throughput\""
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Graph metrics:",
+            "multi": true,
+            "name": "tcp_metric",
+            "options": [
+                {
+                    "selected": false,
+                    "text": "All",
+                    "value": "$__all"
+                },
+                {
+                    "selected": true,
+                    "text": "Throughput",
+                    "value": "8000*(SUM(\"bytes_server\")+SUM(\"bytes_client\"))/$__interval_ms as \"Throughput\""
+                },
+                {
+                    "selected": false,
+                    "text": "Bytes",
+                    "value": "SUM(\"bytes_server\")+SUM(\"bytes_client\") as \"Bytes\""
+                },
+                {
+                    "selected": false,
+                    "text": "Packets",
+                    "value": "SUM(\"packets_server\")+SUM(\"packets_client\") as \"Packets\""
+                },
+                {
+                    "selected": false,
+                    "text": "Active Sessions",
+                    "value": "MAX(\"active_sessions\") as \"Active Sessions\""
+                },
+                {
+                    "selected": false,
+                    "text": "Response Time",
+                    "value": "MEAN(\"response_time_s\") as \"Response Time\""
+                },
+                {
+                    "selected": false,
+                    "text": "Round Trip Time",
+                    "value": "MEAN(\"rtt_client_s\") as \"Client RTT\",MEAN(\"rtt_server_s\") as \"Server RTT\""
+                },
+                {
+                    "selected": false,
+                    "text": "Zero Windows",
+                    "value": "SUM(\"zwins_client\")+SUM(\"zwins_server\") as \"Zero Windows\""
+                },
+                {
+                    "selected": false,
+                    "text": "Retransmissions",
+                    "value": "SUM(\"retransmissions_client\")+SUM(\"retransmissions_server\") as \"Retransmissions\""
+                },
+                {
+                    "selected": false,
+                    "text": "Fragments",
+                    "value": "SUM(\"fragments_server\")+sum(\"fragments_client\") as \"Fragments\""
+                },
+                {
+                    "selected": false,
+                    "text": "Duplicates",
+                    "value": "SUM(\"duplicates_client\")+SUM(\"duplicates_server\") as \"Duplicates\""
+                },
+                {
+                    "selected": false,
+                    "text": "Gaps",
+                    "value": "SUM(\"gaps_client\")+SUM(\"gaps_server\") as \"Gaps\""
+                },
+                {
+                    "selected": false,
+                    "text": "Sequence Errors",
+                    "value": "SUM(\"sequence_errors_client\")+SUM(\"sequence_errors_server\") as \"Sequence Errors\""
+                },
+                {
+                    "selected": false,
+                    "text": "MTU",
+                    "value": "Max(\"mtu_client\") as \"Client MTU\", Max(\"mtu_server\") as \"Server MTU\""
+                },
+                {
+                    "selected": false,
+                    "text": "SYNs",
+                    "value": "SUM(\"syns\") as \"SYNs\""
+                },
+                {
+                    "selected": false,
+                    "text": "SYNACKs",
+                    "value": "SUM(\"synacks\") as \"SYNACKs\""
+                },
+                {
+                    "selected": false,
+                    "text": "FINs",
+                    "value": "SUM(\"fins_client\")+SUM(\"fins_server\") as \"FINs\""
+                },
+                {
+                    "selected": false,
+                    "text": "Resets",
+                    "value": "SUM(\"resets_client\")+SUM(\"resets_server\") as \"Resets\""
+                },
+                {
+                    "selected": false,
+                    "text": "Completed Handshakes",
+                    "value": "Sum(\"connection_established\") as \"Completed Handshakes\""
+                },
+                {
+                    "selected": false,
+                    "text": "Finished Sessions",
+                    "value": "Sum(\"finished_sessions\") as \"Finished Sessions\""
+                },
+                {
+                    "selected": false,
+                    "text": "Open Sessions",
+                    "value": "Max(\"active_sessions\") as \"Open Sessions\""
+                },
+                {
+                    "selected": false,
+                    "text": "Session Bytes",
+                    "value": "MAX(\"bytes_client_session\") as \"Client Session Bytes\", Max(\"bytes_server_session\") as \"Server Session Bytes\""
+                },
+                {
+                    "selected": false,
+                    "text": "Session Packets",
+                    "value": "MAX(\"packets_client_session\") as \"Client Session Packets\", MAX(\"packets_server_session\") as \"Server Session Packets\""
+                },
+                {
+                    "selected": false,
+                    "text": "Session Duration",
+                    "value": "MAX(\"duration_s\") as \"Session Duration\""
+                },
+                {
+                    "selected": false,
+                    "text": "Session Idle Time",
+                    "value": "Max(\"idle_s\") as \"Session Idle Time\""
+                },
+                {
+                    "selected": false,
+                    "text": "Response Time(open)",
+                    "value": "MAX(\"response_time_s\") AS \"Response Time\""
+                },
+                {
+                    "selected": false,
+                    "text": "Missing SYNs",
+                    "value": "SUM(\"missing_syns\") as \"Missing SYNs\""
+                },
+                {
+                    "selected": false,
+                    "text": "SYN Failures",
+                    "value": "SUM(\"syn_failures\") as \"SYN Failures\""
+                },
+                {
+                    "selected": false,
+                    "text": "Min Wins",
+                    "value": "MIN(\"min_win_client_session\") AS \"Client MinWin\", MIN(\"min_win_server_session\") as \"Server MinWin\""
+                },
+                {
+                    "selected": false,
+                    "text": "MTU(open)",
+                    "value": "Max(\"mtu_client_session\") as \"Client MTU\", Max(\"mtu_server_session\") as \"Server MTU\""
+                },
+                {
+                    "selected": false,
+                    "text": "Zero Byte Sessions",
+                    "value": "SUM(\"zero_bytes_sessions\") as \"Zero Byte Sessions\""
+                }
+            ],
+            "query": "Throughput : 8000*(SUM(\"bytes_server\")+SUM(\"bytes_client\"))/$__interval_ms as \"Throughput\", Bytes : SUM(\"bytes_server\")+SUM(\"bytes_client\") as \"Bytes\", Packets : SUM(\"packets_server\")+SUM(\"packets_client\") as \"Packets\",Active Sessions : MAX(\"active_sessions\") as \"Active Sessions\", Response Time : MEAN(\"response_time_s\") as \"Response Time\", Round Trip Time : MEAN(\"rtt_client_s\") as \"Client RTT\"\\,MEAN(\"rtt_server_s\") as \"Server RTT\", Zero Windows : SUM(\"zwins_client\")+SUM(\"zwins_server\") as \"Zero Windows\", Retransmissions : SUM(\"retransmissions_client\")+SUM(\"retransmissions_server\") as \"Retransmissions\", Fragments : SUM(\"fragments_server\")+sum(\"fragments_client\") as \"Fragments\", Duplicates : SUM(\"duplicates_client\")+SUM(\"duplicates_server\") as \"Duplicates\", Gaps : SUM(\"gaps_client\")+SUM(\"gaps_server\") as \"Gaps\", Sequence Errors : SUM(\"sequence_errors_client\")+SUM(\"sequence_errors_server\") as \"Sequence Errors\", MTU : Max(\"mtu_client\") as \"Client MTU\"\\, Max(\"mtu_server\") as \"Server MTU\", SYNs : SUM(\"syns\") as \"SYNs\", SYNACKs : SUM(\"synacks\") as \"SYNACKs\", FINs : SUM(\"fins_client\")+SUM(\"fins_server\") as \"FINs\", Resets : SUM(\"resets_client\")+SUM(\"resets_server\") as \"Resets\", Completed Handshakes : Sum(\"connection_established\") as \"Completed Handshakes\", Finished Sessions : Sum(\"finished_sessions\") as \"Finished Sessions\", Open Sessions : Max(\"active_sessions\") as \"Open Sessions\", Session Bytes : MAX(\"bytes_client_session\") as \"Client Session Bytes\"\\, Max(\"bytes_server_session\") as \"Server Session Bytes\", Session Packets : MAX(\"packets_client_session\") as \"Client Session Packets\"\\, MAX(\"packets_server_session\") as \"Server Session Packets\", Session Duration : MAX(\"duration_s\") as \"Session Duration\", Session Idle Time : Max(\"idle_s\") as \"Session Idle Time\", Response Time(open) : MAX(\"response_time_s\") AS \"Response Time\",Missing SYNs : SUM(\"missing_syns\") as \"Missing SYNs\", SYN Failures : SUM(\"syn_failures\") as \"SYN Failures\", Min Wins : MIN(\"min_win_client_session\") AS \"Client MinWin\"\\, MIN(\"min_win_server_session\") as \"Server MinWin\",  MTU(open) : Max(\"mtu_client_session\") as \"Client MTU\"\\, Max(\"mtu_server_session\") as \"Server MTU\", Zero Byte Sessions : SUM(\"zero_bytes_sessions\") as \"Zero Byte Sessions\"",
+            "queryValue": "",
+            "skipUrlSync": false,
+            "type": "custom"
+        },
+        "tcp_metric_ts_variable": {
+            "current": {
+                "selected": true,
+                "text": [
+                    "Bytes",
+                    "Response Time",
+                    "Round Trip Time",
+                    "Retransmissions",
+                    "SYNs",
+                    "SYNACKs"
+                ],
+                "value": [
+                    "SUM(\"bytes_server\")+SUM(\"bytes_client\") as \"Bytes\"",
+                    "MEAN(\"response_time_s\") as \"Response Time\"",
+                    "MEAN(\"rtt_client_s\") as \"Client RTT\",MEAN(\"rtt_server_s\") as \"Server RTT\"",
+                    "SUM(\"retransmissions_client\")+SUM(\"retransmissions_server\") as \"Retransmissions\"",
+                    "SUM(\"syns\") as \"SYNs\"",
+                    "SUM(\"synacks\") as \"SYNACKs\""
+                ]
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Table metrics (ts):",
+            "multi": true,
+            "name": "tcp_ts_metric",
+            "options": [
+                {
+                    "selected": false,
+                    "text": "All",
+                    "value": "$__all"
+                },
+                {
+                    "selected": false,
+                    "text": "Throughput",
+                    "value": "8*(SUM(\"bytes_server\")+SUM(\"bytes_client\"))/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput\""
+                },
+                {
+                    "selected": true,
+                    "text": "Bytes",
+                    "value": "SUM(\"bytes_server\")+SUM(\"bytes_client\") as \"Bytes\""
+                },
+                {
+                    "selected": false,
+                    "text": "Packets",
+                    "value": "SUM(\"packets_server\")+SUM(\"packets_client\") as \"Packets\""
+                },
+                {
+                    "selected": true,
+                    "text": "Response Time",
+                    "value": "MEAN(\"response_time_s\") as \"Response Time\""
+                },
+                {
+                    "selected": true,
+                    "text": "Round Trip Time",
+                    "value": "MEAN(\"rtt_client_s\") as \"Client RTT\",MEAN(\"rtt_server_s\") as \"Server RTT\""
+                },
+                {
+                    "selected": true,
+                    "text": "SYNs",
+                    "value": "SUM(\"syns\") as \"SYNs\""
+                },
+                {
+                    "selected": true,
+                    "text": "SYNACKs",
+                    "value": "SUM(\"synacks\") as \"SYNACKs\""
+                },
+                {
+                    "selected": false,
+                    "text": "FINs",
+                    "value": "SUM(\"fins_client\")+SUM(\"fins_server\") as \"FINs\""
+                },
+                {
+                    "selected": false,
+                    "text": "Resets",
+                    "value": "SUM(\"resets_client\")+SUM(\"resets_server\") as \"Resets\""
+                },
+                {
+                    "selected": true,
+                    "text": "Retransmissions",
+                    "value": "SUM(\"retransmissions_client\")+SUM(\"retransmissions_server\") as \"Retransmissions\""
+                },
+                {
+                    "selected": false,
+                    "text": "Duplicates",
+                    "value": "SUM(\"duplicates_client\")+SUM(\"duplicates_server\") as \"Duplicates\""
+                },
+                {
+                    "selected": false,
+                    "text": "Gaps",
+                    "value": "SUM(\"gaps_client\")+SUM(\"gaps_server\") as \"Gaps\""
+                },
+                {
+                    "selected": false,
+                    "text": "Sequence Errors",
+                    "value": "SUM(\"sequence_errors_client\")+SUM(\"sequence_errors_server\") as \"Sequence Errors\""
+                },
+                {
+                    "selected": false,
+                    "text": "Fragments",
+                    "value": "SUM(\"fragments_server\")+sum(\"fragments_client\") as \"Fragments\""
+                },
+                {
+                    "selected": false,
+                    "text": "MTU",
+                    "value": "Max(\"mtu_client\") as \"Client MTU\", Max(\"mtu_server\") as \"Server MTU\""
+                },
+                {
+                    "selected": false,
+                    "text": "Zero Windows",
+                    "value": "SUM(\"zwins_client\")+SUM(\"zwins_server\") as \"Zero Windows\""
+                },
+                {
+                    "selected": false,
+                    "text": "Finished Sessions",
+                    "value": "Sum(\"finished_sessions\") as \"Finished Sessions\""
+                }
+            ],
+            "query": "Throughput : 8*(SUM(\"bytes_server\")+SUM(\"bytes_client\"))/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput\", Bytes : SUM(\"bytes_server\")+SUM(\"bytes_client\") as \"Bytes\", Packets : SUM(\"packets_server\")+SUM(\"packets_client\") as \"Packets\", Response Time : MEAN(\"response_time_s\") as \"Response Time\", Round Trip Time : MEAN(\"rtt_client_s\") as \"Client RTT\"\\,MEAN(\"rtt_server_s\") as \"Server RTT\",  SYNs : SUM(\"syns\") as \"SYNs\", SYNACKs : SUM(\"synacks\") as \"SYNACKs\", FINs : SUM(\"fins_client\")+SUM(\"fins_server\") as \"FINs\", Resets : SUM(\"resets_client\")+SUM(\"resets_server\") as \"Resets\", Retransmissions : SUM(\"retransmissions_client\")+SUM(\"retransmissions_server\") as \"Retransmissions\", Duplicates : SUM(\"duplicates_client\")+SUM(\"duplicates_server\") as \"Duplicates\", Gaps : SUM(\"gaps_client\")+SUM(\"gaps_server\") as \"Gaps\", Sequence Errors : SUM(\"sequence_errors_client\")+SUM(\"sequence_errors_server\") as \"Sequence Errors\", Fragments : SUM(\"fragments_server\")+sum(\"fragments_client\") as \"Fragments\", MTU : Max(\"mtu_client\") as \"Client MTU\"\\, Max(\"mtu_server\") as \"Server MTU\", Zero Windows : SUM(\"zwins_client\")+SUM(\"zwins_server\") as \"Zero Windows\", Finished Sessions : Sum(\"finished_sessions\") as \"Finished Sessions\"",
+            "queryValue": "",
+            "skipUrlSync": false,
+            "type": "custom"
+        },
+        "tcp_metric_open_variable": {
+            "current": {
+                "selected": true,
+                "text": [
+                    "Session Bytes",
+                    "Session Duration",
+                    "Completed Handshakes",
+                    "SYN Failures",
+                    "Missing SYNs"
+                ],
+                "value": [
+                    "MAX(\"bytes_client_session\") as \"Client Session Bytes\", Max(\"bytes_server_session\") as \"Server Session Bytes\"",
+                    "MAX(\"duration_s\") as \"Session Duration\"",
+                    "Sum(\"connection_established\") as \"Completed Handshakes\"",
+                    "SUM(\"syn_failures\") as \"SYN Failures\"",
+                    "SUM(\"missing_syns\") as \"Missing SYNs\""
+                ]
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Table metrics (open):",
+            "multi": true,
+            "name": "tcp_open_metric",
+            "options": [
+                {
+                    "selected": false,
+                    "text": "All",
+                    "value": "$__all"
+                },
+                {
+                    "selected": true,
+                    "text": "Session Bytes",
+                    "value": "MAX(\"bytes_client_session\") as \"Client Session Bytes\", Max(\"bytes_server_session\") as \"Server Session Bytes\""
+                },
+                {
+                    "selected": false,
+                    "text": "Session Packets",
+                    "value": "MAX(\"packets_client_session\") as \"Client Session Packets\", MAX(\"packets_server_session\") as \"Server Session Packets\""
+                },
+                {
+                    "selected": true,
+                    "text": "Session Duration",
+                    "value": "MAX(\"duration_s\") as \"Session Duration\""
+                },
+                {
+                    "selected": false,
+                    "text": "Session Idle Time",
+                    "value": "Max(\"idle_s\") as \"Session Idle Time\""
+                },
+                {
+                    "selected": true,
+                    "text": "Completed Handshakes",
+                    "value": "Sum(\"connection_established\") as \"Completed Handshakes\""
+                },
+                {
+                    "selected": true,
+                    "text": "SYN Failures",
+                    "value": "SUM(\"syn_failures\") as \"SYN Failures\""
+                },
+                {
+                    "selected": true,
+                    "text": "Missing SYNs",
+                    "value": "SUM(\"missing_syns\") as \"Missing SYNs\""
+                },
+                {
+                    "selected": false,
+                    "text": "Open Sessions",
+                    "value": "Max(\"active_sessions\") as \"Open Sessions\""
+                },
+                {
+                    "selected": false,
+                    "text": "Min Wins",
+                    "value": "MIN(\"min_win_client_session\") AS \"Client MinWin\", MIN(\"min_win_server_session\") as \"Server MinWin\""
+                },
+                {
+                    "selected": false,
+                    "text": "MTU(open)",
+                    "value": "Max(\"mtu_client_session\") as \"Client MTU\", Max(\"mtu_server_session\") as \"Server MTU\""
+                },
+                {
+                    "selected": false,
+                    "text": "Zero Byte Sessions",
+                    "value": "SUM(\"zero_bytes_sessions\") as \"Zero Byte Sessions\""
+                }
+            ],
+            "query": "Session Bytes : MAX(\"bytes_client_session\") as \"Client Session Bytes\"\\, Max(\"bytes_server_session_max\") as \"Server Session Bytes\", Session Packets : MAX(\"packets_client_session\") as \"Client Session Packets\"\\, MAX(\"packets_server_session\") as \"Server Session Packets\", Session Duration : MAX(\"duration_s\") as \"Session Duration\", Session Idle Time : Max(\"idle_s\") as \"Session Idle Time\", Completed Handshakes : Sum(\"connection_established\") as \"Completed Handshakes\",  SYN Failures : SUM(\"syn_failures\") as \"SYN Failures\", Missing SYNs : SUM(\"missing_syns\") as \"Missing SYNs\", Open Sessions : Max(\"active_sessions\") as \"Open Sessions\", Min Wins : MIN(\"min_win_client_session\") AS \"Client MinWin\"\\, MIN(\"min_win_server_session\") as \"Server MinWin\",  MTU(open) : Max(\"mtu_client_session\") as \"Client MTU\"\\, Max(\"mtu_server_session\") as \"Server MTU\", Zero Byte Sessions : SUM(\"zero_bytes_sessions\") as \"Zero Byte Sessions\"",
+            "queryValue": "",
+            "skipUrlSync": false,
+            "type": "custom"
+        },
+        "tcp_graph": {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": "tcp",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "smooth",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "locale"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Bytes/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "decbytes"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/MTU/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/RTT|Duration|Latency|Response Time|Idle Time|Round Trip Time/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "s"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Packet|Flow|Fragments/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "locale"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/.*\\/s/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "/s"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "fill": 0,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 34
+            },
+            "hiddenSeries": false,
+            "id": 100,
+            "interval": "10s",
+            "legend": {
+                "alignAsTable": true,
+                "avg": true,
+                "current": false,
+                "hideEmpty": true,
+                "hideZero": true,
+                "max": false,
+                "min": false,
+                "rightSide": true,
+                "show": true,
+                "sort": "avg",
+                "sortDesc": true,
+                "total": true,
+                "values": true
+            },
+            "lines": true,
+            "linewidth": 1,
+            "maxDataPoints": 60,
+            "nullPointMode": "null",
+            "options": {
+                "alertThreshold": true,
+                "legend": {
+                    "calcs": [
+                        "mean",
+                        "sum"
+                    ],
+                    "displayMode": "table",
+                    "placement": "right",
+                    "showLegend": true,
+                    "sortBy": "Mean",
+                    "sortDesc": true
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "desc"
+                }
+            },
+            "percentage": false,
+            "pluginVersion": "9.2.13",
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "repeat": "tcp_metric",
+            "repeatDirection": "v",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": true,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "alias": "$col: $tag_ip",
+                    "datasource": "tcp",
+                    "groupBy": [
+                        {
+                            "params": [
+                                "1s"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "cstor_name"
+                            ],
+                            "type": "tag"
+                        },
+                        {
+                            "params": [
+                                "network_monitor_name"
+                            ],
+                            "type": "tag"
+                        },
+                        {
+                            "params": [
+                                "none"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "measurement": "flows_summary_vlan_tag_outer",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT ${tcp_metric:raw} FROM \"tcp_timeslice_summary_client_ip\" WHERE \"cstor_name\" =~ /^$cstor_name$/ AND \"network_monitor_name\" =~ /^$network_monitor$/ AND \"ip\" =~ /$ip/ AND (\"ip\" !~ /$singleton_ips/ ${singleton_filter:raw} true) ${filter}  AND $timeFilter GROUP BY time($interval), \"cstor_name\", \"network_monitor_name\", \"ip\" fill(none)",
+                    "rawQuery": true,
+                    "refId": "A",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "bytes"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "sum"
+                            },
+                            {
+                                "params": [
+                                    " *8"
+                                ],
+                                "type": "math"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                },
+                {
+                    "alias": "$col: $tag_ip (open)",
+                    "datasource": "tcp",
+                    "groupBy": [
+                        {
+                            "params": [
+                                "1s"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "cstor_name"
+                            ],
+                            "type": "tag"
+                        },
+                        {
+                            "params": [
+                                "network_monitor_name"
+                            ],
+                            "type": "tag"
+                        },
+                        {
+                            "params": [
+                                "none"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "hide": false,
+                    "measurement": "flows_summary_vlan_tag_outer",
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT ${tcp_metric:raw} FROM \"tcp_open_summary_client_ip\" WHERE \"cstor_name\" =~ /^$cstor_name$/ AND \"network_monitor_name\" =~ /^$network_monitor$/ AND \"ip\" =~ /$ip/  AND (\"ip\" !~ /$singleton_ips/ ${singleton_filter:raw} true)  ${filter}  AND $timeFilter GROUP BY time($interval), \"cstor_name\", \"network_monitor_name\", \"ip\" fill(none)",
+                    "rawQuery": true,
+                    "refId": "B",
+                    "resultFormat": "time_series",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "bytes"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "sum"
+                            },
+                            {
+                                "params": [
+                                    " *8"
+                                ],
+                                "type": "math"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "thresholds": [],
+            "timeRegions": [],
+            "title": "Client  - ${tcp_metric}",
+            "tooltip": {
+                "shared": true,
+                "sort": 2,
+                "value_type": "individual"
+            },
+            "type": "timeseries",
+            "xaxis": {
+                "mode": "time",
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "$$hashKey": "object:968",
+                    "format": "bps",
+                    "logBase": 1,
+                    "show": true
+                },
+                {
+                    "$$hashKey": "object:969",
+                    "format": "short",
+                    "logBase": 1,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false
+            }
+        },
+        "ts_table_apply_as_filter": {
+            "datasource": "tcp",
+            "description": "Click on the Server IP column to open a dashboard with IP conversations for the selected Server IP.",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "filterable": false,
+                        "inspect": true
+                    },
+                    "mappings": [],
+                    "noValue": "-",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "locale"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Bytes/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "decbytes"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 2
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/RTT|Duration|Latency|Response Time|Idle Time|Round Trip Time/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "s"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/.*\\/s/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "/s"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "application_port"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"application_port\" =~ /^${__data.fields.application_port}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"application_port\" =~ /^${__data.fields.application_port}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for a Network Application \"${__data.fields.application_port}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Network Application&var-category_value=${__data.fields.application_port}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "vlan_tag_outer"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"vlan_tag_outer\" =~ /^${__data.fields.vlan_tag_outer}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"vlan_tag_outer\" =~ /^${__data.fields.vlan_tag_outer}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Outer VLAN \"${__data.fields.vlan_tag_outer}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Outer VLAN&var-category_value=${__data.fields.vlan_tag_outer}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "vlan_tag_inner"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"vlan_tag_inner\" =~ /^${__data.fields.vlan_tag_inner}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"vlan_tag_outer\" =~ /^${__data.fields.vlan_tag_outer}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Inner VLAN \"${__data.fields.vlan_tag_inner}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Innver VLAN&var-category_value=${__data.fields.vlan_tag_inner}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "hosts_group"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"hosts_group\" =~ /^${__data.fields.hosts_group}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"hosts_group\" =~ /^${__data.fields.hosts_group}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Hosts Group \"${__data.fields.hosts_group}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Hosts Group&var-category_value=${__data.fields.hosts_group}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "custom_application"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"custom_application\" =~ /^${__data.fields.custom_application}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"custom_application\" =~ /^${__data.fields.custom_application}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Custom Application \"${__data.fields.custom_application}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Custom Application&var-category_value=${__data.fields.custom_application}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip_type"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"ip_type\" =~ /^${__data.fields.ip_type}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"ip_type\" =~ /^${__data.fields.ip_type}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for IP Type \"${__data.fields.ip_type}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=IP Type&var-category_value=${__data.fields.ip_type}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "tls_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"tls_domain\" =~ /^${__data.fields.tls_domain}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"tls_domain\" =~ /^${__data.fields.tls_domain}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for SNI Name \"${__data.fields.tls_domain}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=SNI Name&var-category_value=${__data.fields.tls_domain}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "rdns_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"rdns_domain\" =~ /^${__data.fields.rdns_domain}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"rdns_domain\" =~ /^${__data.fields.rdns_domain}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Reverse DNS \"${__data.fields.rdns_domain}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Reverse DNS&var-category_value=${__data.fields.rdns_domain}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "city"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"city\" =~ /^${__data.fields.city}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"city\" =~ /^${__data.fields.city}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for City \"${__data.fields.city}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=City&var-category_value=${__data.fields.city}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "cname_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"cname_domain\" =~ /^${__data.fields.cname_domain}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"cname_domain\" =~ /^${__data.fields.cname_domain}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Canonical Name \"${__data.fields.cname_domain}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Canonical Name&var-category_value=${__data.fields.cname_domain}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "country"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"country\" =~ /^${__data.fields.country}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"country\" =~ /^${__data.fields.country}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Country \"${__data.fields.country}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Country&var-category_value=${__data.fields.country}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "external_nat"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"external_nat\" =~ /^${__data.fields.external_nat}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"external_nat\" =~ /^${__data.fields.external_nat}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for External Nat \"${__data.fields.country}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=External Nat&var-category_value=${__data.fields.external_nat}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "endpoint_application"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"endpoint_application\" =~ /^${__data.fields.endpoint_application}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"endpoint_application\" =~ /^${__data.fields.endpoint_application}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Endpoint Application \"${__data.fields.endpoint_application}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Endpoint Application&var-category_value=${__data.fields.endpoint_application}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip"
+                        },
+                        "properties": [
+                            {
+                                "id": "displayName",
+                                "value": "Server IP"
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"ip\" =~ /^${__data.fields.ip}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"ip\" =~ /^${__data.fields.ip}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IP Conversation for \"${__data.fields.ip}\"",
+                                        "url": "/graph-engine/d/tcp_ip_conversations/?var-cstor_name=${cstor_name:text}&var-network_monitor=${network_monitor:text}&var-tcp_metric=Throughput&var-resolution=${resolution}&var-ipa=${__data.fields.ip}&${__url_time_range} "
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byType",
+                            "options": "string"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/.*\\/s/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "/s"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 23
+            },
+            "id": 114,
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "enablePagination": true,
+                    "fields": [
+                        "Completed Handshakes",
+                        "Missing SYNs",
+                        "SYN Failures",
+                        "Zero Byte Sessions"
+                    ],
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": true
+                },
+                "frameIndex": 1,
+                "showHeader": true,
+                "sortBy": [
+                    {
+                        "desc": true,
+                        "displayName": "Duplicates"
+                    }
+                ]
+            },
+            "pluginVersion": "9.5.6",
+            "targets": [
+                {
+                    "datasource": "tcp",
+                    "groupBy": [
+                        {
+                            "params": [
+                                "$__interval"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "null"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "hide": false,
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT ${tcp_open_metric:raw} FROM \"tcp_open_summary_server_ip\" \n WHERE (\"cstor_name\" =~ /^$cstor_name$/ AND \"network_monitor_name\" =~ /^$network_monitor$/)  AND \"ip\" =~ /$ip/ AND (\"ip\" !~ /$singleton_ips/ ${singleton_filter:raw} true) ${filter} AND $timeFilter \n GROUP BY \"ip\", ${ip_info:raw} fill(none)\n",
+                    "rawQuery": true,
+                    "refId": "B",
+                    "resultFormat": "table",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "value"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "title": "Server - Open Session",
+            "transformations": [
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true
+                        },
+                        "indexByName": {
+                            "Time": 0,
+                            "ip": 1,
+                            "cstor_name": 2,
+                            "ip_protocol_name": 3,
+                            "network_monitor_name": 4,
+                            "application_port": 5,
+                            "vlan_tag_outer": 6,
+                            "vlan_tag_inner": 7,
+                            "hosts_group": 8,
+                            "custom_application": 9,
+                            "tls_domain": 10,
+                            "cname_domain": 11,
+                            "rdns_domain": 12,
+                            "ip_type": 13,
+                            "country": 14,
+                            "city": 15
+                        },
+                        "renameByName": {
+                            "cstor_name": "cStor",
+                            "network_monitor_name": "Network Monitor",
+                            "ip_protocol_name": "IP Protocol",
+                            "application_port": "Network Application",
+                            "vlan_tag_outer": "Outer VLAN",
+                            "vlan_tag_inner": "Inner VLAN",
+                            "hosts_group": "Hosts Group",
+                            "custom_application": "Application",
+                            "city": "City",
+                            "cname_domain": "Canonical Name",
+                            "country": "Country",
+                            "ip": "IP",
+                            "ip_type": "IP Type",
+                            "rdns_domain": "Reverse DNS",
+                            "tls_domain": "SNI Domain"
+                        }
+                    }
+                }
+            ],
+            "type": "table"
+        },
+        "open_table_apply_as_filter": {
+            "datasource": "tcp",
+            "description": "Click on the Client IP column to open a dashboard with IP conversations for the selected Client IP.",
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "align": "auto",
+                        "cellOptions": {
+                            "type": "auto"
+                        },
+                        "filterable": false,
+                        "inspect": true
+                    },
+                    "mappings": [],
+                    "noValue": "-",
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "locale"
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Bytes/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "decbytes"
+                            },
+                            {
+                                "id": "decimals",
+                                "value": 2
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/RTT|Duration|Latency|Response Time|Idle Time|Round Trip Time/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "s"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/.*\\/s/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "/s"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "application_port"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"application_port\" =~ /^${__data.fields.application_port}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"application_port\" =~ /^${__data.fields.application_port}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for a Network Application \"${__data.fields.application_port}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Network Application&var-category_value=${__data.fields.application_port}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "vlan_tag_outer"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"vlan_tag_outer\" =~ /^${__data.fields.vlan_tag_outer}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"vlan_tag_outer\" =~ /^${__data.fields.vlan_tag_outer}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Outer VLAN \"${__data.fields.vlan_tag_outer}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Outer VLAN&var-category_value=${__data.fields.vlan_tag_outer}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "vlan_tag_inner"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "none"
+                            },
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"vlan_tag_inner\" =~ /^${__data.fields.vlan_tag_inner}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"vlan_tag_outer\" =~ /^${__data.fields.vlan_tag_outer}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": false,
+                                        "title": "IPs for Inner VLAN \"${__data.fields.vlan_tag_inner}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Innver VLAN&var-category_value=${__data.fields.vlan_tag_inner}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "hosts_group"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"hosts_group\" =~ /^${__data.fields.hosts_group}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"hosts_group\" =~ /^${__data.fields.hosts_group}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Hosts Group \"${__data.fields.hosts_group}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Hosts Group&var-category_value=${__data.fields.hosts_group}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "custom_application"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"custom_application\" =~ /^${__data.fields.custom_application}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"custom_application\" =~ /^${__data.fields.custom_application}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Custom Application \"${__data.fields.custom_application}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Custom Application&var-category_value=${__data.fields.custom_application}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip_type"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"ip_type\" =~ /^${__data.fields.ip_type}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"ip_type\" =~ /^${__data.fields.ip_type}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for IP Type \"${__data.fields.ip_type}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=IP Type&var-category_value=${__data.fields.ip_type}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "tls_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"tls_domain\" =~ /^${__data.fields.tls_domain}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"tls_domain\" =~ /^${__data.fields.tls_domain}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for SNI Name \"${__data.fields.tls_domain}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=SNI Name&var-category_value=${__data.fields.tls_domain}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "rdns_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"rdns_domain\" =~ /^${__data.fields.rdns_domain}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"rdns_domain\" =~ /^${__data.fields.rdns_domain}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Reverse DNS \"${__data.fields.rdns_domain}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Reverse DNS&var-category_value=${__data.fields.rdns_domain}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "city"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"city\" =~ /^${__data.fields.city}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"city\" =~ /^${__data.fields.city}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for City \"${__data.fields.city}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=City&var-category_value=${__data.fields.city}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "cname_domain"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"cname_domain\" =~ /^${__data.fields.cname_domain}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"cname_domain\" =~ /^${__data.fields.cname_domain}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Canonical Name \"${__data.fields.cname_domain}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Canonical Name&var-category_value=${__data.fields.cname_domain}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "country"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"country\" =~ /^${__data.fields.country}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"country\" =~ /^${__data.fields.country}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Country \"${__data.fields.country}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Country&var-category_value=${__data.fields.country}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "external_nat"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"external_nat\" =~ /^${__data.fields.external_nat}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"external_nat\" =~ /^${__data.fields.external_nat}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for External Nat \"${__data.fields.country}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=External Nat&var-category_value=${__data.fields.external_nat}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "endpoint_application"
+                        },
+                        "properties": [
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"endpoint_application\" =~ /^${__data.fields.endpoint_application}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"endpoint_application\" =~ /^${__data.fields.endpoint_application}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IPs for Endpoint Application \"${__data.fields.endpoint_application}\"",
+                                        "url": "/graph-engine/d/tcp_ips_for_an_application/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-category=Endpoint Application&var-category_value=${__data.fields.endpoint_application}&var-tcp_metric=Throughput&${__url_time_range}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "ip"
+                        },
+                        "properties": [
+                            {
+                                "id": "displayName",
+                                "value": "Client IP"
+                            },
+                            {
+                                "id": "links",
+                                "value": [
+                                    {
+                                        "targetBlank": false,
+                                        "title": "Apply as filter \"ip\" =~ /^${__data.fields.ip}$/",
+                                        "url": "/graph-engine/d/ip_summary_tcp/?var-cstor_name=${cstor_name}&var-network_monitor=${network_monitor}&var-resolution=${resolution}&var-filter=${filter} AND \"ip\" =~ /^${__data.fields.ip}$/&var-tcp_metric=Throughput&${__url_time_range}"
+                                    },
+                                    {
+                                        "targetBlank": true,
+                                        "title": "IP Conversation for \"${__data.fields.ip}\"",
+                                        "url": "/graph-engine/d/tcp_ip_conversations/?var-cstor_name=${cstor_name:text}&var-network_monitor=${network_monitor:text}&var-tcp_metric=Throughput&var-resolution=${resolution}&var-ipa=${__data.fields.ip}&${__url_time_range} "
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byType",
+                            "options": "string"
+                        },
+                        "properties": [
+                            {
+                                "id": "custom.filterable",
+                                "value": true
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/Throughput/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "bps"
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byRegexp",
+                            "options": "/.*\\/s/"
+                        },
+                        "properties": [
+                            {
+                                "id": "unit",
+                                "value": "/s"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 10,
+                "w": 24,
+                "x": 0,
+                "y": 51
+            },
+            "id": 109,
+            "options": {
+                "cellHeight": "sm",
+                "footer": {
+                    "countRows": false,
+                    "enablePagination": true,
+                    "fields": [
+                        "Completed Handshakes",
+                        "Missing SYNs",
+                        "SYN Failures",
+                        "Zero Byte Sessions"
+                    ],
+                    "reducer": [
+                        "sum"
+                    ],
+                    "show": true
+                },
+                "frameIndex": 1,
+                "showHeader": true,
+                "sortBy": [
+                    {
+                        "desc": true,
+                        "displayName": "Duplicates"
+                    }
+                ]
+            },
+            "pluginVersion": "9.5.6",
+            "targets": [
+                {
+                    "datasource": "tcp",
+                    "groupBy": [
+                        {
+                            "params": [
+                                "$__interval"
+                            ],
+                            "type": "time"
+                        },
+                        {
+                            "params": [
+                                "null"
+                            ],
+                            "type": "fill"
+                        }
+                    ],
+                    "hide": false,
+                    "orderByTime": "ASC",
+                    "policy": "default",
+                    "query": "SELECT ${tcp_open_metric:raw} FROM \"tcp_open_summary_client_ip\" \n WHERE (\"cstor_name\" =~ /^$cstor_name$/ AND \"network_monitor_name\" =~ /^$network_monitor$/)  AND \"ip\" =~ /$ip/ AND (\"ip\" !~ /$singleton_ips/ ${singleton_filter:raw} true) ${filter}  AND $timeFilter \n GROUP BY \"ip\", ${ip_info:raw} fill(none)\n",
+                    "rawQuery": true,
+                    "refId": "B",
+                    "resultFormat": "table",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "value"
+                                ],
+                                "type": "field"
+                            },
+                            {
+                                "params": [],
+                                "type": "mean"
+                            }
+                        ]
+                    ],
+                    "tags": []
+                }
+            ],
+            "title": "Client - Open Session",
+            "transformations": [
+                {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                            "Time": true
+                        },
+                        "indexByName": {
+                            "Time": 0,
+                            "ip": 1,
+                            "cstor_name": 2,
+                            "ip_protocol_name": 3,
+                            "network_monitor_name": 4,
+                            "application_port": 5,
+                            "vlan_tag_outer": 6,
+                            "vlan_tag_inner": 7,
+                            "hosts_group": 8,
+                            "custom_application": 9,
+                            "tls_domain": 10,
+                            "cname_domain": 11,
+                            "rdns_domain": 12,
+                            "ip_type": 13,
+                            "country": 14,
+                            "city": 15
+                        },
+                        "renameByName": {
+                            "cstor_name": "cStor",
+                            "network_monitor_name": "Network Monitor",
+                            "ip_protocol_name": "IP Protocol",
+                            "application_port": "Network Application",
+                            "vlan_tag_outer": "Outer VLAN",
+                            "vlan_tag_inner": "Inner VLAN",
+                            "hosts_group": "Hosts Group",
+                            "custom_application": "Application",
+                            "city": "City",
+                            "cname_domain": "Canonical Name",
+                            "country": "Country",
+                            "ip": "IP",
+                            "ip_type": "IP Type",
+                            "rdns_domain": "Reverse DNS",
+                            "tls_domain": "SNI Domain"
+                        }
+                    }
+                }
+            ],
+            "type": "table"
+        }
+    }
+}
