@@ -1,0 +1,297 @@
+# config file version
+apiVersion: 1
+
+
+# list of datasources to insert/update depending what's available in the database
+datasources:
+  # <string, required> name of the datasource. Required
+  - name: fdc2_applications
+    # <string, required> datasource type. Required
+    type: influxdb
+    # <string, required> access mode. proxy or direct (Server or Browser in the UI). Required
+    access: proxy
+    # <int> org id. will default to orgId 1 if not specified
+    orgId: 1
+    # <string> custom UID which can be used to reference this datasource in other parts of the configuration, if not specified will be generated automatically
+    uid: d170b2fd-28fc-4c20-82e5-dc6f5b7e5b35
+    # <string> url
+    url: http://influxdb:8086
+    # <string> database name, if used
+    database: applications
+    # <bool> enable/disable basic auth
+    basicAuth: true
+    # <string> basic auth username
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    # <bool> enable/disable with credentials headers
+    withCredentials: true
+    # <bool> mark as default datasource. Max one per org
+    isDefault:
+    # <map> fields that will be converted to json and stored in jsonData
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    # <string> json object of data that will be encrypted.
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    # <bool> allow users to edit datasources from the UI.
+    editable: false
+
+  - name: fdc2_dhcp
+    uid: bfe4ad92-29de-4dc8-9f52-50452b448774
+    orgId: 1
+    database: dhcp
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: true
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: fdc2_dns
+    uid: b08e3b06-bf15-44e8-adf4-1f61021f3384
+    orgId: 1
+    database: dns
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: fdc2_flows
+    uid: c9428a99-6e32-475f-816e-cfce6c0c4e33
+    orgId: 1
+    database: flows
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: flows
+    uid: flows
+    orgId: 1
+    database: flows
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: applications
+    uid: applications
+    orgId: 1
+    database: applications
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: ip_map
+    uid: ip_map
+    orgId: 1
+    database: ip_map
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: https
+    uid: https
+    orgId: 1
+    database: https
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: dns
+    uid: dns
+    orgId: 1
+    database: dns
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: icmp
+    uid: icmp
+    orgId: 1
+    database: indicators
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+  - name: dhcp
+    uid: dhcp
+    orgId: 1
+    database: dhcp
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+  
+  - name: sys
+    uid: sys
+    orgId: 1
+    database: sys
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    basicAuth: true
+    basicAuthUser: cclear
+    secureJsonData:
+      basicAuthPassword: cclearpw
+    withCredentials: true
+    isDefault: false
+    jsonData: 
+      httpMode: POST
+      timeInterval: 1s
+      tlsSkipVerify: true
+    secureJsonFields:
+      basicAuthPassword: true
+      password: true
+    version: 1
+    readOnly: false
+
+    

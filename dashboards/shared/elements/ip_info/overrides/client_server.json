@@ -1,0 +1,442 @@
+[
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_hosts_group"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Hosts Group \"${__data.fields.client_hosts_group}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Hosts Group﻿&var-category_value=${__data.fields.client_hosts_group}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_custom_application"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Custom Application \"${__data.fields.client_custom_application}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Custom Application﻿&var-category_value=${__data.fields.client_custom_application}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_tls_domain"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for SNI Name \"${__data.fields.client_tls_domain}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿SNI Name﻿&var-category_value=${__data.fields.client_tls_domain}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_cname_domain"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Canonical Name \"${__data.fields.client_cname_domain}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Canonical Name﻿&var-category_value=${__data.fields.client_cname_domain}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_endpoint_application"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Endpoint Application \"${__data.fields.client_endpoint_application}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Endpoint Application﻿&var-category_value=${__data.fields.client_endpoint_application}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_external_nat"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for External Nat \"${__data.fields.client_external_nat}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿External Nat﻿&var-category_value=${__data.fields.client_external_nat}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_ip_type"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for IP Type \"${__data.fields.client_ip_type}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿IP Type﻿&var-category_value=${__data.fields.client_ip_type}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_rdns_domain"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Reverse DNS \"${__data.fields.client_rdns_domain}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Reverse DNS﻿&var-category_value=${__data.fields.client_rdns_domain}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_country"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Country \"${__data.fields.client_country}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Country﻿&var-category_value=${__data.fields.client_country}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "client_city"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for City \"${__data.fields.client_city}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿City﻿&var-category_value=${__data.fields.client_city}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_hosts_group"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Hosts Group \"${__data.fields.server_hosts_group}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Hosts Group﻿&var-category_value=${__data.fields.server_hosts_group}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_custom_application"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Custom Application \"${__data.fields.server_custom_application}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Custom Application﻿&var-category_value=${__data.fields.server_custom_application}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_tls_domain"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for SNI Name \"${__data.fields.server_tls_domain}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿SNI Name﻿&var-category_value=${__data.fields.server_tls_domain}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_cname_domain"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Canonical Name \"${__data.fields.server_cname_domain}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Canonical Name﻿&var-category_value=${__data.fields.server_cname_domain}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_endpoint_application"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Endpoint Application \"${__data.fields.server_endpoint_application}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Endpoint Application﻿&var-category_value=${__data.fields.server_endpoint_application}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_external_nat"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for External Nat \"${__data.fields.server_external_nat}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿External Nat﻿&var-category_value=${__data.fields.server_external_nat}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_ip_type"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for IP Type \"${__data.fields.server_ip_type}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿IP Type﻿&var-category_value=${__data.fields.server_ip_type}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_rdns_domain"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Reverse DNS \"${__data.fields.server_rdns_domain}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Reverse DNS﻿&var-category_value=${__data.fields.server_rdns_domain}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_country"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for Country \"${__data.fields.server_country}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿Country﻿&var-category_value=${__data.fields.server_country}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "server_city"
+    },
+    "properties": [
+      {
+        "id": "links",
+        "value": [
+          {
+            "targetBlank": true,
+            "title": "IPs for City \"${__data.fields.server_city}\"",
+            "url": "/graph-engine/d/tcp_ips_for_an_application_summary_ip/?var-cstor_name=${cstor_name}﻿&var-network_monitor=﻿${network_monitor}﻿&var-resolution=﻿${resolution}﻿&var-category=﻿City﻿&var-category_value=${__data.fields.server_city}&var-tcp_metric=${tcp_metric:text}﻿&${__url_time_range}"
+          }
+        ]
+      },
+      {
+        "id": "custom.filterable",
+        "value": true
+      }
+    ]
+  }
+]

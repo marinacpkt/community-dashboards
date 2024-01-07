@@ -5,3 +5,6 @@
 *.zip
 converted/
 .gitignore
+.vscode/
+preferences/
+__pycache__/
