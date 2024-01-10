@@ -3,27 +3,32 @@ import os
 import copy
 import re
 from typing import Dict, List, Optional, Tuple
-from dashboards.shared.commons import AbstractDashboardEditor, DashboardTransformError
+from dashboards.shared.commons import AbstractDashboardEditor, DashboardTransformError, replace_key_list, replace_value_str, replace_value_str_list
 from dashboards.shared.constants import DASHBOARD_SETS_APPLICATIONS, KEY_TITLE
 
 
 class ApplicationConverter(AbstractDashboardEditor):
         
     @staticmethod
-    def traverse_update(dash_element: Dict, label_mappings: List[Tuple[str, str]], schema_mapping: Tuple[str, str]) -> None:
+    def traverse_update(dash_element: Dict | List, label_mappings: List[Tuple[str, str]], schema_mapping: Tuple[str, str]) -> None:
         """Traversing the passed in dashboard recursively and update as needed: root is dashboard root.
         """
         if isinstance(dash_element, Dict):
-            ApplicationConverter.replace_value_str_list(dash_element, [KEY_TITLE,'query','byField', 'options', 'url', 'label', 'text'], label_mappings)
-            ApplicationConverter.replace_value_str(dash_element, 'query', schema_mapping)
-            # ApplicationConverter.replace_key(dash_element, 'indexByName', schema_mapping)
-            ApplicationConverter.replace_key_list(dash_element, 'indexByName', label_mappings)
-            ApplicationConverter.replace_value_str(dash_element, f'source_{schema_mapping[1]}', label_mappings[-1])
+            # depth first
             for value in dash_element.values():
-                ApplicationConverter.traverse_update(value, label_mappings, schema_mapping)
+                if isinstance(value, Dict) or isinstance(value, List):
+                    ApplicationConverter.traverse_update(value, label_mappings, schema_mapping)
+            # leaf
+            replace_value_str_list(dash_element, [KEY_TITLE,'query','byField', 'options', 'url', 'label', 'text'], label_mappings)
+            replace_value_str(dash_element, 'query', schema_mapping)
+            # ApplicationConverter.replace_key(dash_element, 'indexByName', schema_mapping)
+            replace_key_list(dash_element, 'indexByName', label_mappings)
+            replace_value_str(dash_element, f'source_{schema_mapping[1]}', label_mappings[-1])
         elif isinstance(dash_element, list):
             for item in dash_element:
                 ApplicationConverter.traverse_update(item, label_mappings, schema_mapping)
+        else: # wrong schema
+            raise DashboardTransformError('traverse_update takes only Dict or List element (allowed by dashboard elements). Please validate the dashboard on schema.')
         
     @staticmethod
     def from_object(dash_obj: Dict, key_from: str, file: Optional[str] = None) -> Optional[List[Tuple[Dict, Optional[str]]]]:
@@ -74,40 +79,6 @@ class ApplicationConverter(AbstractDashboardEditor):
             dash_obj: Dict = json.load(dash_json)
             converted_dashboards = ApplicationConverter.from_object(dash_obj, application_from_key, file)
         return converted_dashboards
-
-    @staticmethod
-    def replace_key_list(dash_element: Dict, child_key: str, mappings: List[Tuple[str, str]]) -> Dict:
-        for mapping in mappings:
-            ApplicationConverter.replace_key(dash_element, child_key, mapping)
-        return dash_element
-    
-    @staticmethod
-    def replace_key(dash_element: Dict, child_key: str, mapping: Tuple[str, str]) -> Dict:
-        if child_key not in dash_element.keys():
-            return dash_element
-        match_key = dash_element[child_key]
-        key, value = mapping
-        if key in match_key.keys():
-            match_key[value] = match_key.pop(key)
-        return dash_element
-
-    @staticmethod
-    def replace_value_str_list(dash_element: Dict, child_keys: List, mappings: List[Tuple[str, str]]) -> Dict:
-        for child_key in child_keys:
-            if child_key in dash_element.keys():
-                for key, value in mappings:
-                    dash_element = ApplicationConverter.replace_value_str(dash_element, child_key, (key, value))
-        return dash_element
-    
-    @staticmethod
-    def replace_value_str(dash_element: Dict, child_key: str, mapping: Tuple[str, str]) -> Dict:
-        if child_key not in dash_element.keys():
-            return dash_element
-        match, sub = mapping
-        str_original = dash_element[child_key]
-        if isinstance(str_original, str):
-            dash_element[child_key] = re.sub(match, sub, str_original)
-        return dash_element
     
 if __name__ == '__main__':
     pass

@@ -1,18 +1,10 @@
-#!/bin/bash -x
-
-# Script to export dashboards from a specified cClear  as JSON files
-# "folderUid" and "folderTitle" are added to each dashboard to help identify the folders to import later by
-# running "dashboard_import.sh".
-# Modified from Paul Sulistio's scripts.
-
-# todo: add support to import multiple folders separated by ";"
+#!/bin/bash
 
 OPTSPEC=":hu:p:t:f:"
 
-# Show help on how to use this script
 show_help() {
 cat << EOF
-Usage: $0 [-u USER] [-p PASSWORD] [-t TARGET_HOST_IP] [-f FROM_FOLDER]
+Usage: $0 [-u USER] [-p PASSWORD] [-f FROM_FOLDER] [-t TARGET_HOST]
 Script to export grafana dashboards
     -u      Required. cClear user to login
     -p      Required. cClear user password to login
@@ -23,7 +15,7 @@ Script to export grafana dashboards
 EOF
 }
 
-# Check script invocation options
+###### Check script invocation options ######
 while getopts "$OPTSPEC" optchar; do
     case "$optchar" in
         h)
@@ -35,7 +27,7 @@ while getopts "$OPTSPEC" optchar; do
         p)
             PASSWORD="$OPTARG";;
         t)
-            TARGET_HOST_IP="$OPTARG";;
+            HOST="$OPTARG";;
         f)
             FROM="$OPTARG";;
         \?)
@@ -49,8 +41,7 @@ while getopts "$OPTSPEC" optchar; do
     esac
 done
 
-# Check required arguments
-if [ -z "$USER" ] || [ -z "$PASSWORD" ] || [ -z "$TARGET_HOST_IP" ]; then
+if [ -z "$USER" ] || [ -z "$PASSWORD" ] || [ -z "$HOST" ]; then
     show_help
     exit 1
 fi
@@ -104,105 +95,104 @@ function log_title() {
    ${SETCOLOR_NORMAL}
 }
 
+counter=0
+
 function init() {
-   DASH_FOLDER="dashboards"
-   DASH_DIR="$PWD/${DASH_FOLDER}"
+   DATE_TIME=$(date '+%d%m%Y_%H%M%S')
+   DASH_DIR="$PWD/dashboards_${HOST}_${DATE_TIME}"
    if [ ! -d "${DASH_DIR}" ]; then
-   	 mkdir -p "${DASH_DIR}"
+   	 mkdir "${DASH_DIR}" 
    else
    	 log_title "----------------- A $DASH_DIR directory already exists! -----------------"
-   	 log_title "----------------- Rename or remove this directory before continuing -----------------"
-   	 exit 1
    fi
 }
 
-# set cookie param for curl command according to login options
-STATUS_CODE=$(curl --noproxy '*' -k --write-out '%{http_code}' --silent --output /dev/null --data "uname=$USER&psw=$PASSWORD" "https://$TARGET_HOST_IP/api/auth/v2/self-service/login")
-if [[ "$STATUS_CODE" -eq 404 ]]; then
-  HOST="https://$USER:$PASSWORD@$TARGET_HOST_IP"
-elif [[ "$STATUS_CODE" -eq 302 ]]; then
-  HOST="https://$TARGET_HOST_IP"
-  mycookie="$PWD/mycookie"
-  LOGIN=$(curl --noproxy '*' -k -c mycookie --data "uname=$USER&psw=$PASSWORD" $HOST/sess/login?rp=/vb/)
-  CURL_COOKIE="-b $mycookie"
-else
-  show_help
-  exit 1
+init
+
+# host url
+if [[ ! "$HOST" == "https://"* ]]; then
+  HOST="https://$USER:$PASSWORD@$HOST"
 fi
 
-# get folders
-folder_json=$(curl --noproxy '*' -k $CURL_COOKIE --request "GET" -H "Content-Type:application/json" \
-"$HOST/graph-engine/api/folders")
+folder_json=$(curl --noproxy '*' -k --request "GET" -H "Content-Type:application/json" "$HOST/graph-engine/api/folders")
 # From folder specified:
-declare -a dashboard_uids
 if [ ${#FROM} -gt 0 ]; then
-  IFS=';' read -ra FROM_LIST <<< "$FROM"
-  for i in "${FROM_LIST[@]}"; do
-    folder_i=$(echo $i | xargs)
-    # Find matching folder from remote (with folder title)
-    FOLDER_UID=$(echo "$folder_json" | jq -r '.[] | select(.title == "'"${folder_i}"'") | .uid')
-    # Folder not found, prompt error and exit
-    if [ -z "$FOLDER_UID" ] ; then
-      log_failure "Folder ${i} is not found. Please check spelling and double quote with any spaces."
-      continue
+   # Find matching folder from remote (with folder title)
+  IFS=";" read -a arrFROM <<< ""$FROM""
+  FOLDER_UID=()
+    for fr in "${arrFROM[@]}"
+    do
+        echo "folder: $fr"
+        echo "1"
+        FOLDER_UID+=($(echo $folder_json | jq -r '.[] | select(.title == "'"$fr"'") | .uid'))
+    done
+  
+  #FOLDER_UID=$(echo $folder_json | jq -r '.[] | select(.title == "'"$FROM"'") | .uid')
+  # Folder found: get the collection of dashboard uids in this folder
+  dashboard_uids=""
+  for fuid in "${FOLDER_UID[@]}"
+  do
+    uid=$(echo "$fuid" | xargs)
+    echo "fuid: $uid"
+  # Folder not found, prompt error and get out
+    if [ -z "$fuid" ] ; then
+      log_failure "Folder $fuid is not found. Please check spelling and double quote with any spaces."
+      exit 1
     fi
-    # Folder found: get the collection of dashboard uids in this folder
-    uids=$(curl --noproxy '*' -k $CURL_COOKIE  "$HOST"/graph-engine/api/search\?query\=\& | \
-    jq -r '.[] | select(.type | contains("dash-db")) | select(.folderUid != null) | select(.folderUid == "'"$FOLDER_UID"'") | .uid')
-    dashboard_uids+=${uids[@]}
+    dashboard_uids="$dashboard_uids $(curl --noproxy '*' -k "$HOST"/graph-engine/api/search\?query\=\& | \
+    jq -r '.[] | select(.type | contains("dash-db")) | select(.folderUid != null) | select(.folderUid == "'"$uid"'") | .uid')"
   done
+  
 # From all folders:
 else
-  dashboard_uids=$(curl --noproxy '*' -k $CURL_COOKIE  "$HOST"/graph-engine/api/search\?query\=\& | \
+  dashboard_uids=$(curl --noproxy '*' -k "$HOST"/graph-engine/api/search\?query\=\& | \
   jq -r '.[] | select(.type | contains("dash-db")) | .uid')
 fi
 
-#echo "dashboard_uids: "$dashboard_uids
-
-# exit if nothing to import
-#if [[ ${#dashboard_uid[@]} -eq 0 ]]; then
-#  exit 1
-#fi
-
+ # treestate
+ if [[ ! -e "$DASH_DIR/treestate.ts" ]]; then
+    printf  "import { NodeData } from 'react-folder-tree';\nexport const dashboardTree: NodeData =\
+    {\n name: 'cPacket Dashboards',\n dashPath: 'assets/dashboards',\n children: [\n" > \
+    "$DASH_DIR/treestate.ts"
+ fi
+ arrFolders=()
 # Export dashboards
-init
-counter=0
 for dashboard_uid in $dashboard_uids; do
    url=$(echo "$HOST/graph-engine/api/dashboards/uid/$dashboard_uid" | tr -d '\r')
-   dashboard_json=$(curl --noproxy '*' -k $CURL_COOKIE  "$url")
-   dashboard_title=$(echo "$dashboard_json" | jq -r '.dashboard | .title' | sed -r 's/[ \/]+/_/g' )
-   dashboard_file=$(echo "$dashboard_title" | tr '[:upper:]' '[:lower:]')
-   dashboard_version=$(echo "$dashboard_json" | jq -r '.dashboard | .version')
+   dashboard_json=$(curl --noproxy '*' -k "$url")
+   dashboard_title=$(echo "$dashboard_json" | jq -r '.dashboard | .title')
+   dashboard_file=$(echo "$dashboard_title" | sed -r 's/[ \/]+/_/g' | sed -r 's/[-\/]+/_/g' | tr '[:upper:]' '[:lower:]')
    dashboard_folder_raw=$(echo "$dashboard_json" | jq -r '.meta | .folderTitle')
-   dashboard_folder=$(echo "$dashboard_json" | jq -r '.meta | .folderTitle' | sed -r 's/[ \/]+/_/g' )
+   dashboard_folder=$(echo "$dashboard_json" | jq -r '.meta | .folderTitle' | sed -r 's/[ \/]+/_/g' | sed -r 's/[-\/]+/_/g')
    dashboard_folderId=$(echo "$dashboard_json" | jq -r '.meta | .folderId')
 
-   # Find folder uid to save (so that importing can find the right folder to import to)
-   folder_uid=$(echo "$folder_json" | jq -r '.[] | select(.id=='$dashboard_folderId') | .uid ')
-
+   folder_path=$(echo ${dashboard_folder} | tr '[:upper:]' '[:lower:]')
    # create the folder if not existing
-   if [ ! -d "${DASH_DIR}/${dashboard_folder}" ]; then
-   	 mkdir "${DASH_DIR}/${dashboard_folder}"
+   if [ ! -d "${DASH_DIR}/${folder_path}" ]; then
+   	 mkdir "${DASH_DIR}/${folder_path}"
+     arrFolders+=(${folder_path})
    fi
-
+    # treestate
+    if [[ ! -e "$DASH_DIR/${folder_path}/treestate.ts" ]]; then
+        printf  "{ name: '${dashboard_folder_raw}',\n dashPath: '${folder_path}',\n children: [\n" > \
+        "$DASH_DIR/${folder_path}/treestate.ts"
+    fi
+   
    counter=$((counter + 1))
-   # save dashboard with folder uid and title to help identify folders to import later.
-   echo "$dashboard_json" | jq  '.dashboard | . += {"folderUid":"'$folder_uid'", "folderTitle": "'"$dashboard_folder_raw"'"}' > \
-   "$DASH_DIR/${dashboard_folder}/${dashboard_file}_v${dashboard_version}.json"
+   printf "{ name: '${dashboard_title}', dashPath: '${dashboard_file}.json' },\n" >> "$DASH_DIR/${folder_path}/treestate.ts"
+   # save dashboard with meta, dashboard and folder.
+   echo "$dashboard_json" | jq  '.dashboard | . += {"id":null, "folderTitle": "'"$dashboard_folder_raw"'"}' > \
+   "$DASH_DIR/${folder_path}/${dashboard_file}.json"
    log_success "Dashboard has been saved\t\t title=\"${dashboard_file}\", uid=\"${dashboard_uid}\",
-   path=\"${DASH_DIR}/${dashboard_folder}/${dashboard_file}_v${dashboard_version}.json\"."
+   path=\"${DASH_DIR}/${folder_path}/${dashboard_file}.json\"."
 done
 
-if [[ ${counter} -gt 0 ]]; then
-   cclear_json=$(curl --noproxy '*' -k $CURL_COOKIE  "$HOST/api/admin/info")
-   CCLEAR_VERSION="cclear_$(echo $cclear_json | jq '.data.software.build' | tr -d '"')"
-   grafana_json=$(curl --noproxy '*' -k $CURL_COOKIE  "$HOST/graph-engine/api/health")
-   GRAFANA_VERSION="grafana_$(echo $grafana_json | jq '.version' | tr -d '"')"
-   DATE_TIME="date_$(date '+%d%m%Y_%H%M%S')"
-   DASH_FILE_ZIP="${DASH_FOLDER}_${TARGET_HOST_IP}_${CCLEAR_VERSION}_${GRAFANA_VERSION}_${DATE_TIME}"
-   zip -r -m ${DASH_FILE_ZIP}.zip ${DASH_FOLDER}
-fi
-rm mycookie 2> /dev/null
+for value in "${arrFolders[@]}"
+do
+    cat "$DASH_DIR/${value}/treestate.ts" >> "$DASH_DIR/treestate.ts"
+    printf "],\n},\n" >> "$DASH_DIR/treestate.ts"
+done
+printf "],\n};\n" >> "$DASH_DIR/treestate.ts"
 
-log_title "${counter} dashboards were saved in "$PWD/${DASH_FILE_ZIP}".zip";
+log_title "${counter} dashboards were saved in ${DASH_DIR}";
 log_title "------------------------------ FINISHED ---------------------------------";

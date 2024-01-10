@@ -1,354 +1,272 @@
 import json
 import os
 import re
+import operator
 from typing import Dict, List, Optional, Tuple
 
-from dashboards.shared.commons import DashboardTransformError, AbstractDashboardEditor, get_ds_name
-from dashboards.shared.constants import CUSTOM_OPTIONS_DEFAULT_ALL, DATASOURCE_MIXED, ON_DEMAND_MEASUREMENTS, QUERY_REFID_SEQUENCE
-from dashboards.convert.collectorconverter.collector_config import FOLDERS_WITH_MERGED_GLOBAL_DASHBOARDS, get_mapping_for_ds
+from dashboards.shared.commons import DashboardTransformError, AbstractDashboardEditor, get_ds_name, node_remove_from_dict_by_key, node_remove_from_list_by_match, node_remove_from_nested_dict_by_keys, leaf_node_replace,query_add_tag_to_groupby, create_new_influxdb_datasource, overrides_update_links
+from dashboards.shared.constants import OPTIONS_DEFAULT_ALL, DATASOURCE_MIXED, ON_DEMAND_MEASUREMENTS, QUERY_REFID_SEQUENCE, DS_INDICATORS
+from dashboards.convert.collectorconverter.collector_config import FOLDERS_WITH_MERGED_GLOBAL_DASHBOARDS, get_mapping_for_ds, COLLECTOR_MAPPINGS, get_local_collector_label
 
+# NOTE: restrictions to merged global cclear converter: only handle one panel per row kind of dashboards.
+# Otherwise the y positions are likely messed up as new panels get added to the dashboard without handling positions
 
-def update_cstor_name(cstor_name):
-    cstor_name["current"] = CUSTOM_OPTIONS_DEFAULT_ALL
-    cstor_name["includeAll"] = "true"
-    cstor_name["multi"] = "true"
-    cstor_name["datasource"] = {
-                                "type": "influxdb",
-                                "uid": "indicators"
-                                }
-    cstor_name["query"] = 'show tag values from cstor_ports with key="cstor_name"'
+def remove_nm_from_query(query_element: Dict) -> Dict:
+    key = 'query'
+    if isinstance(query_element, Dict) and key in query_element.keys():
+        leaf_node_replace(query_element, key, '(?i)AND\s+\"network_monitor_name\"\s*=~\s*/\^\$network_monitor\$/',"")
+        leaf_node_replace(query_element, key, '"network_monitor_name"\s+=~\s+/\^\$network_monitor\$/\s+(?i)AND', "",)
+        leaf_node_replace(query_element, key, '(?i)AND\s+\"network_monitor_name\"\s*=~\s*/\^\$\{network_monitor\}\$/', "" )
+        leaf_node_replace(query_element, key, '"network_monitor_name"\s+=~\s+/\^\$\{network_monitor\}\$/\s+(?i)AND', "")
+        leaf_node_replace(query_element, key, ' "network_monitor_name",', "")
+        leaf_node_replace(query_element, key, ',\s*"network_monitor_name"', "")
+        leaf_node_replace(query_element, key, '\(\\"network_monitor_name\\"\s*=~\s*/\^\$network_monitor\$/\)\s+(?i)AND', "")
+        leaf_node_replace(query_element, key, '\,\s*network_monitor_name\s*', " ")
+        leaf_node_replace(query_element, key, 'with\s+key =\s+\\"network_monitor_name\\"', " ")
+        leaf_node_replace(query_element, key, '\"network_monitor_name\"', " ")
+    return query_element
 
-def update_cstor_ip(cstor_ip):
-    cstor_ip["current"] = CUSTOM_OPTIONS_DEFAULT_ALL
-    cstor_ip["includeAll"] = "true"
-    cstor_ip["multi"] = "true"
-    cstor_ip["datasource"] = {
-                                "type": "influxdb",
-                                "uid": "indicators"
-                                }
-    cstor_ip["query"] = 'show tag values from cstor_ports with key="cstor_ip" where cstor_name =~ /^$cstor_name$/'
+def remove_nm_from_link(url_element: Dict) -> Dict:
+    key = 'url'
+    if  isinstance(url_element, Dict) and key in url_element.keys():
+        leaf_node_replace(url_element, key, '&var-network_monitor=\﻿\$\{network_monitor\}', "")
+        leaf_node_replace(url_element, key, '&var-network_monitor=﻿\$\{network_monitor\}', "")
+        leaf_node_replace(url_element, key, '&var-network_monitor=\$\{network_monitor\}', "")
+        leaf_node_replace(url_element, key, '&var-network_monitor=\ufeff*\$\{network_monitor\}\ufeff*', "")
+        leaf_node_replace(url_element, key, '&var-network_monitor=\ufeff*\$\{network_monitor\:text\}\ufeff*', "")
+        leaf_node_replace(url_element, key, '&var-network_monitor=\$\{network_monitor\:text\}', "")
+        leaf_node_replace(url_element, key, '\?var-network_monitor=\$\{network_monitor\}\&', "?")
+        leaf_node_replace(url_element, key, '\&var-network_monitor=\$network_monitor', "")
+        leaf_node_replace(url_element, key, '\&?var-network_monitor=.*', "")
+    return url_element
 
+def remove_nm_from_title(title_element: Dict) -> Dict:
+    key = 'title'
+    if  isinstance(title_element, Dict) and key in title_element.keys():
+        leaf_node_replace(title_element, key, "\s+and\s+network\s+monitor\)", ")")
+        leaf_node_replace(title_element, key, "\s+and\s+network\s+monitor\)", ")")
+        leaf_node_replace(title_element, key, ",\s+network\s+monitor\s+and", " and")
+        leaf_node_replace(title_element, key, "\$network_monitor:", "")
+        leaf_node_replace(title_element, key, "\$network_monitor", "")
+        leaf_node_replace(title_element, key, "\$\{network_monitor\}", "")
+        leaf_node_replace(title_element, key, "\$\{network_monitor\:text\}", "")
+        leaf_node_replace(title_element, key, "\s*\-\s*\$network_monitor", "")
+        leaf_node_replace(title_element, key, ",\s*network monitor", "")
+        leaf_node_replace(title_element, key, "\s*by\s+Network\s+Monitor", "")
+    return title_element
 
-def remove_nm_dash(dash_obj):
-    if isinstance(dash_obj, List):
-        for ls in dash_obj:
-            remove_nm_dash(ls)
-    elif isinstance(dash_obj, Dict):
-        for key, value in dash_obj.copy().items():
-            if key == "url":
-                dash_obj["url"] = remove_nm_link(value)
-            elif key == "title":
-                dash_obj["title"] = remove_nm_title(value)
-            elif key == "excludeByName":
-                del dash_obj["excludeByName"]
-            elif key == "query":
-                if isinstance(value, str):
-                    dash_obj["query"] = remove_nm_query(value)
-            elif key == "tags":
-                tag_network_monitor = [nm for nm in value if isinstance(nm, Dict) and nm["key"]=="network_monitor_name"]
-                if len(tag_network_monitor) > 0:
-                    value.remove(tag_network_monitor[0])
-            elif key == "alias":
-                dash_obj["alias"]  = remove_nm_alias(value)
-            elif key == "groupBy":
-                groupby_network_monitor = [nm for nm in value if "network_monitor_name" in nm["params"] or "network_monitor" in nm["params"]]
-                if len(groupby_network_monitor) > 0:
-                    value.remove(groupby_network_monitor[0])
-            elif key == "select":
-                select_network_monitor = ""
-                for select_inner in value:
-                    select_network_monitor = [nm for nm in select_inner if "network_monitor_name" in nm["params"]]
-                    if len(select_network_monitor) > 0:
-                        select_inner.remove(select_network_monitor[0])
-            elif key == "fields":
-                fields_network_monitor = [nm for nm in value if "(?i)network\s+(?i)monitor" in nm]
-                if len(fields_network_monitor) > 0:
-                    value.remove("network_monitor_name")
-                if isinstance(value, Dict) and "network_monitor_name" in value.keys():
-                    del value["network_monitor_name"]
-                if isinstance(value, Dict) and "Network Monitor" in value.keys():
-                    del value["Network Monitor"]
-            elif key == "indexByName":
-                if "network_monitor_name" in value.keys():
-                    del value["network_monitor_name"]
-            elif key == "renameByName":
-                if "network_monitor_name" in value.keys():
-                    del value["network_monitor_name"]   
-            else: 
-                pass
+def remove_nm_from_alias(alias_element: Dict) -> Dict:
+    key = 'alias'
+    if  isinstance(alias_element, Dict) and key in alias_element.keys():
+        leaf_node_replace(alias_element, key, "\,\s*\$tag_network_monitor_name", "")
+        leaf_node_replace(alias_element, key, "\:\s*\$tag_network_monitor_name", "")
+        leaf_node_replace(alias_element, key, "\(alias_element, key, \$tag_network_monitor_name\)", "")
+        leaf_node_replace(alias_element, key, "\s*-\s*\$tag_network_monitor_name", "")
+        leaf_node_replace(alias_element, key, "\$tag_network_monitor_name\s*-\s*", "")
+        leaf_node_replace(alias_element, key, "\$tag_network_monitor_name\s*", "")
+    return alias_element
+
+def remove_nm_str_replace(dash_element):
+    remove_nm_from_link(dash_element)
+    remove_nm_from_title(dash_element)
+    remove_nm_from_query(dash_element)
+    remove_nm_from_alias(dash_element)
+    leaf_node_replace(dash_element, 'repeat', 'network_monitor', '')
+
+# tree node: breadth first
+# leaf node: deapth first
+def remove_nm_from_dash(dash_element: Dict | List):
+    if isinstance(dash_element, List):
+        for item in dash_element:
+            remove_nm_from_dash(item)
+            remove_nm_str_replace(item)
+    elif isinstance(dash_element, Dict):
+        # remove matching dict element from dict: child of dash_element to remove
+        node_remove_from_dict_by_key(dash_element, 'excludeByName')
+        for item in dash_element.copy().items():
+            key, value = item
+            # depth first
+            if isinstance(value, Dict):
+                node_remove_from_nested_dict_by_keys(dash_element, 'fields', 'network_monitor_name')
+                node_remove_from_nested_dict_by_keys(dash_element, 'fields', 'Network Monitor')
+                node_remove_from_nested_dict_by_keys(dash_element, 'indexByName', 'network_monitor_name')
+                node_remove_from_nested_dict_by_keys(dash_element, 'renameByName', 'network_monitor_name')
+                remove_nm_from_dash(dash_element[key] )
+            elif isinstance(value, List):
+                # remove matching list element from list of dict[key]: matching grandchild(LOL) to remove, and child remove if no grandchild left...O_O
+                node_remove_from_list_by_match(dash_element, 'tags', [('key', operator.eq, 'network_monitor_name')])
+                node_remove_from_list_by_match(dash_element, 'list', [('name', operator.eq, 'network_monitor')])
+                # TODO: handle 'network_monitor_name::tag'
+                node_remove_from_list_by_match(dash_element, 'groupBy', [('params', operator.contains, 'network_monitor_name'), ('params',operator.contains, 'network_monitor')])
+                node_remove_from_list_by_match(dash_element, 'select', [('params', operator.contains, 'network_monitor_name'), ('params',operator.contains, 'network_monitor')])
+                node_remove_from_list_by_match(dash_element, 'fields', [(None, operator.contains, '(?i)network\s+(?i)monitor')])
+                remove_nm_from_dash(dash_element[key])
+            else:  # leaf node
+                remove_nm_str_replace(dash_element)
     else:
-        pass  # do nothing with other types: int, float, bool, None
+        # raise DashboardTransformError('traverse_update takes only Dict or List element (allowed by dashboard elements). Please validate the dashboard on schema.')   
+        pass
 
-def remove_nm_query(query):
-    new_query = re.sub('(?i)AND\s+\"network_monitor_name\"\s*=~\s*/\^\$network_monitor\$/',"", query)
-    new_query = re.sub('"network_monitor_name"\s+=~\s+/\^\$network_monitor\$/\s+(?i)AND', "", new_query)
-    new_query = re.sub('(?i)AND\s+\"network_monitor_name\"\s*=~\s*/\^\$\{network_monitor\}\$/', "", new_query)
-    new_query = re.sub('"network_monitor_name"\s+=~\s+/\^\$\{network_monitor\}\$/\s+(?i)AND', "", new_query)
-    new_query = re.sub(' "network_monitor_name",', "", new_query)
-    new_query = re.sub(',\s*"network_monitor_name"', "", new_query)
-    new_query = re.sub('\(\\"network_monitor_name\\"\s*=~\s*/\^\$network_monitor\$/\)\s+(?i)AND', "", new_query)
-    new_query = re.sub('\,\s*network_monitor_name\s*', " ", new_query)
-    new_query = re.sub('with\s+key =\s+\\"network_monitor_name\\"', " ", new_query)
-    return new_query
-
-def remove_nm_link(url):
-    new_url = re.sub('&var-network_monitor=\﻿\$\{network_monitor\}', "", url)
-    new_url = re.sub('&var-network_monitor=﻿\$\{network_monitor\}', "", new_url)
-    new_url = re.sub('&var-network_monitor=\$\{network_monitor\}', "", new_url)
-    new_url = re.sub('&var-network_monitor=\ufeff*\$\{network_monitor\}\ufeff*', "", new_url)
-    new_url = re.sub('&var-network_monitor=\ufeff*\$\{network_monitor\:text\}\ufeff*', "", new_url)
-    new_url = re.sub('&var-network_monitor=\$\{network_monitor\:text\}', "", new_url)
-    new_url = re.sub('\?var-network_monitor=\$\{network_monitor\}\&', "?", new_url)
-    new_url = re.sub('\&var-network_monitor=\$network_monitor', "", new_url)
-    return new_url
-
-def remove_nm_title(title):
-    new_title = re.sub("\s+and\s+network\s+monitor\)", ")", title)
-    new_title = re.sub("\s+and\s+network\s+monitor\)", ")", new_title)
-    new_title = re.sub(",\s+network\s+monitor\s+and", " and", new_title)
-    new_title = re.sub("\$network_monitor:", "", new_title)
-    new_title = re.sub("\$network_monitor", "", new_title)
-    new_title = re.sub("\$\{network_monitor\}", "", new_title)
-    new_title = re.sub("\$\{network_monitor\:text\}", "", new_title)
-    new_title = re.sub("\s*\-\s*\$network_monitor", "", new_title)
-    new_title = re.sub(",\s*network monitor", "", new_title)
-    new_title = re.sub("\s*by\s+Network\s+Monitor", "", new_title)
-    return new_title
-
-def remove_nm_alias(alias):
-    new_alias = re.sub("\,\s*\$tag_network_monitor_name", "", alias)
-    new_alias = re.sub("\:\s*\$tag_network_monitor_name", "", new_alias)
-    new_alias = re.sub("\(\$tag_network_monitor_name\)", "", new_alias)
-    new_alias = re.sub("\s*-\s*\$tag_network_monitor_name", "", new_alias)
-    new_alias = re.sub("\$tag_network_monitor_name\s*-\s*", "", new_alias)
-    new_alias = re.sub("\$tag_network_monitor_name\s*", "", new_alias)
-    return new_alias
-
-def update_graph_panel(panel):
+def update_graph_panel(panel: Dict):
     ds_name = get_ds_name(panel["datasource"])
     # start duplicating per collector ds of the same db
-    ds_mapped = get_mapping_for_ds(ds_name)
+    ds_mapped: Optional[List[Tuple[str, str]]] = get_mapping_for_ds(ds_name)
     if ds_mapped:
         # ds to be mixed
         panel["datasource"] = DATASOURCE_MIXED
         # targets (list)
-        targets = panel["targets"]
+        targets: List = panel["targets"]
+        refIds = [target['refId'] for target in targets]
+        refId_latest = max(refIds)
+        index = QUERY_REFID_SEQUENCE.index(refId_latest)
         duplicated_targets = []
-        index = 0
         is_on_demand = False
         for target in targets:
-            # query
-            if "query" in target and 'rawQuery' in target.keys() and target['rawQuery']:
-                query = target["query"]
-                # add cstor_name to groupby
-                if not re.search(r',\s*\"?cstor_name\"?|\"?cstor_name\"?\s*,/g', query):
-                    if "fill" in query:
-                        fillIndex = query.rindex("fill")
-                        query = query[:fillIndex] + ', "cstor_name" ' +query[fillIndex:]
-                    else:
-                        query = query + ', "cstor_name" '
-                target["query"] = query
-                if any(ondemand in query for ondemand in ON_DEMAND_MEASUREMENTS):
-                    is_on_demand = True
-            # groupby
-            if "groupBy" in target.keys():
-                groupby = target["groupBy"]
-                groupby_cstor_name = [cstor for cstor in groupby if "cstor_name" in cstor["params"]]
-                if len(groupby_cstor_name) == 0:
-                    groupby.insert(0, {
-                                    "params": [
-                                    "cstor_name"
-                                    ],
-                                    "type": "tag"
-                                    })
-            # alias        
-            alias = target["alias"]
-            collector_tag = "" if is_on_demand else "(HKEx) "
-            if "$tag_cstor_name" not in alias:
-                if "$tag_" in alias:
-                    tagIndex = alias.index("$tag_")
-                    newAlias = alias[:tagIndex] + collector_tag + "$tag_cstor_name, " + alias[tagIndex:]
-                else:
-                    newAlias = collector_tag + "$tag_cstor_name"
-            else:
-                newAlias = alias.replace("$tag_cstor_name", collector_tag + "$tag_cstor_name")
-            target["alias"] = newAlias
-            # refId
-            target["refId"] = QUERY_REFID_SEQUENCE[index]
-            index = index + 1
+            # add cstor_name to groupby
+            query_add_tag_to_groupby(target, 'cstor_name', ',\s*\"?cstor_name\"?|\"?cstor_name\"?\s*,/g', get_local_collector_label())     
+            # duplicate queries one per datasource, update datasource uid
             if not is_on_demand:
-                # duplicate queries one per datasource, update datasource uid
-                for new_ds in ds_mapped:
+                for new_collector_key, new_collector_ds in ds_mapped:
                     new_target = target.copy()
-                    new_target["datasource"] = {
-                                            "type": "influxdb",
-                                            "uid": new_ds
-                                            }
-                    # if index == 25:
-                    #     print('test')
+                    # update query datasource
+                    new_target["datasource"] = create_new_influxdb_datasource(new_collector_ds)
+                    # update query refId
+                    index = index + 1
                     new_target["refId"] = QUERY_REFID_SEQUENCE[index]
-                    split_location = new_ds.index("_")
-                    dc_name = new_ds[:split_location]
+                    # update alias with new collector label: replace the original with new
+                    new_label: Dict[str, str] = COLLECTOR_MAPPINGS[new_collector_key][0]
                     alias = new_target["alias"]
-                    alias = alias.replace("HKEx", dc_name.upper())
+                    for key, value in new_label.items():
+                        alias = alias.replace(key, value)
                     new_target["alias"] = alias
                     duplicated_targets.append(new_target)
-                    index = index + 1
         # add duplicated targets
         for nt in duplicated_targets:
             targets.append(nt)
 
+def variable_single_multi_all(variable_element: Dict, variable_name: str, data_source: Dict, multi: bool, all: bool, query: str) -> Dict:
+    if not isinstance(variable_element, Dict) or "name" not in variable_element.keys() or variable_element["name"] != variable_name:
+        return variable_element
+    variable_element["current"] = OPTIONS_DEFAULT_ALL
+    variable_element["includeAll"] = all
+    variable_element["multi"] = multi
+    variable_element["datasource"] = data_source
+    variable_element["query"] = query
+    return variable_element
 
-def convert_variables(variables):
+def convert_variables(variables: List) -> List:
     if isinstance(variables, List):
         for index, variable in enumerate(variables):
-            if variable["name"] == "cstor_name":
-                update_cstor_name(variables[index])
-            if variable["name"] == "cstor_ip":
-                update_cstor_ip(variables[index])
-            if variable["name"] == "network_monitor":
-                variables.remove(variable)
+            variable_single_multi_all(variable, "cstor_name", DS_INDICATORS, True, True, 'show tag values from cstor_ports with key="cstor_name"')
+            variable_single_multi_all(variable, "cstor_ip", DS_INDICATORS, True, True, 'show tag values from cstor_ports with key="cstor_ip" where cstor_name =~ /^$cstor_name$/')
+    return variables
 
+def update_panel_position_y(position_element: Dict, current_posion_y: int) -> Tuple[Dict, int]:
+    gridPos = position_element.copy()
+    gridPos["y"] = current_posion_y
+    next_position_y = current_posion_y + gridPos["h"]
+    return gridPos, next_position_y
 
+def is_target_querying_from_on_demand(targets_element: Dict) -> bool:
+    for target in targets_element:
+        if "query" in target:
+            query = target["query"]
+            if any(ondemand in query for ondemand in ON_DEMAND_MEASUREMENTS):
+                return True
+    return False
+
+# TODO: validate index correctness and if necessary
 def convert_panels(owner, panels, y_axis):
     new_panels = []
     index = 0
     for panel in panels:
+        # row
         if panel["type"] == "row":
-            gridPos = panel["gridPos"].copy()
-            gridPos["y"] = y_axis
-            y_axis = y_axis + gridPos["h"]
-            panel["gridPos"] = gridPos
-            if "panels" in panel:
-                children = panel["panels"]
-                convert_panels(panel, children, y_axis)
+            # breadth first to maintain parent position and orders
+            panel["gridPos"], y_axis  = update_panel_position_y(panel['gridPos'], y_axis)
             new_panels.insert(index, panel)
             index = index + 1
+            # children
+            if "panels" in panel and panel["panels"]:
+                convert_panels(panel, panel["panels"], y_axis)
+        # graph (timeseries)
         elif panel["type"] == "timeseries":
             update_graph_panel(panel)
-            gridPos = panel["gridPos"].copy()
-            gridPos["y"] = y_axis
-            y_axis = y_axis + gridPos["h"]
-            panel["gridPos"] = gridPos
+            panel["gridPos"], y_axis  = update_panel_position_y(panel['gridPos'], y_axis)
             new_panels.insert(index, panel)
             index = index + 1
+        # on-demand collector
         elif panel["type"] == "cclear-ondemand-panel":
-            ds = "flow_data_4_Tuple"
-            if "TCP" in owner["title"]:
-                ds = "tcp_4_Tuple"
-            if "5 Tuple" in owner["title"]:
-                ds = ds.replace("4", "5")
+            ds = "tcp_4_Tuple" if "TCP" in owner["title"] else "flow_data_4_Tuple"
+            ds = ds.replace("4", "5") if "5 Tuple" in owner["title"] else ds
             # TODO: other analytics
             options = panel["options"]
             options["ltType"] = "Analytics, cStor and IP/CIDR "
             options["analyticsType"] = ds
             options["nmName"] = ""
             options["cStorName"] = "${cstor_name:raw}"
-            # if "targets" in panel.keys():
-            #     for target in panel["targets"]:
-            #         target["datasource"] = {
-            #                             "type": "mixed",
-            #                             "uid": ds
-            #                             }
             new_panels.insert(index, panel)
             index = index + 1
+        # table: TODO: validate panel position esp. the original local panel?
         elif panel["type"] == "table":
             ds_name = get_ds_name(panel["datasource"])
-            ds_mapped = get_mapping_for_ds(ds_name)
+            ds_mapped: Optional[List[Tuple[str, str]]] = get_mapping_for_ds(ds_name)
             if ds_mapped:
-                # check if contains on demand measurements
-                is_on_demand = False
-                targets = panel["targets"]
-                for target in targets:
-                    if "query" in target:
-                        query = target["query"]
-                        if any(ondemand in query for ondemand in ON_DEMAND_MEASUREMENTS):
-                            is_on_demand = True
-                            break
-                # title
-                if not is_on_demand:
-                    panel["title"] = "(HKEx) " + panel["title"]
                 # y axis
-                gridPos = panel["gridPos"].copy()
-                gridPos["y"] = y_axis
-                y_axis = y_axis + gridPos["h"]
-                panel["gridPos"] = gridPos
-                # transform: assume only one "organize" transform per table
+                panel["gridPos"], y_axis  = update_panel_position_y(panel['gridPos'], y_axis)
+                # transform: assuming only one "organize" transform per table
                 if 'transformations' in panel.keys():
                     organize = [x for x in panel["transformations"] if x["id"] == "organize"]
-                    if organize:
+                    if organize and 'options' in organize[0].keys():
                         options = organize[0]["options"]
-                        if "renameByName" in options:
-                            options["renameByName"]["cstor_name"] = "cStor Name"
-                        else:
-                            options["renameByName"] = {"cstor_name": "cStor Name"}
-                        if "indexByName" in options:
-                            options["indexByName"]["cstor_name"] = 0
-                        else:
-                            options["indexByName"] = {"cstor_name": 0}
-                        if "excludeByName" in options:
-                            options["excludeByName"]["Time"] = True
-                        else:
-                            options["excludeByName"] = {"Time": True}
-                # url cstor name: "fieldConfig"."overrides".listItem: "properties".listItem: {"id": "links", "values": [..., "url"]
+                        options["renameByName"] = {"cstor_name": "cStor Name"}
+                        options["indexByName"] = {"cstor_name": 0}
+                        options["excludeByName"] = {"Time": True}
+                # check if contains on demand measurements
+                is_on_demand = is_target_querying_from_on_demand(panel["targets"])
                 if not is_on_demand:
+                    # title
+                    panel["title"] = f'"({get_local_collector_label()}) "{panel["title"]}'
                     overrides = panel["fieldConfig"]["overrides"]
-                    for override in overrides:
-                        properties = override["properties"]
-                        for prop in properties:
-                            if prop["id"] == "links":
-                                values = prop["value"]
-                                for value in values:
-                                    url = value["url"]
-                                    if url:
-                                        new_url = re.sub("var\-cstor_name=\$\{cstor_name\:text\}","var-cstor_name=All", url)
-                                        new_url = re.sub("var\-cstor_name=\$\{cstor_name\}","var-cstor_name=All", new_url)
-                                        new_url = re.sub("var\-cstor_name=\$cstor_name","var-cstor_name=All", new_url)
-                                        new_url = re.sub("var\-cstor_ip=\$\{cstor_ip\:text\}","var-cstor_ip=All", new_url)
-                                        new_url = re.sub("var\-cstor_ip=\$\{cstor_ip\}","var-cstor_ip=All", new_url)
-                                        new_url = re.sub("var\-cstor_ip=\$cstor_ip","var-cstor_ip=All", new_url)
-                                        value["url"] = new_url
-        
+                    panel["fieldConfig"]["overrides"] = links_csotr_to_all(overrides)
                 new_panels.insert(index, panel)
                 index = index + 1
-
                 if not is_on_demand:
-                    for new_ds in ds_mapped:
+                    for new_collector_key, new_collector_ds in ds_mapped:
                         new_panel = panel.copy()
                         # title
-                        split_location = new_ds.index("_")
-                        dc_name = new_ds[:split_location]
-                        title = new_panel["title"]
-                        title = title.replace("HKEx", dc_name.upper())
-                        new_panel["title"] = title
+                        new_label: Dict[str, str] = COLLECTOR_MAPPINGS[new_collector_key][0]
+                        if new_label:
+                            title = new_panel["title"]
+                            for key, value in new_label.items():
+                                title = title.replace(key, value)
+                            new_panel["title"] = title
                         # y axis
-                        gridPos = new_panel["gridPos"].copy()
-                        gridPos["y"] = y_axis
-                        y_axis = y_axis + gridPos["h"]
-                        new_panel["gridPos"] = gridPos
+                        new_panel["gridPos"], y_axis  = update_panel_position_y(new_panel['gridPos'], y_axis)
                         # datasource
-                        new_panel["datasource"] =  {
-                                                "type": "influxdb",
-                                                "uid": new_ds
-                                                }
+                        new_panel["datasource"] = create_new_influxdb_datasource(new_collector_ds)
                         targets = new_panel["targets"]
                         for target in targets:
-                            target["datasource"] =  {
-                                                "type": "influxdb",
-                                                "uid": new_ds
-                                                }
+                            target["datasource"] = create_new_influxdb_datasource(new_collector_ds)
                         # panel position in order
                         new_panels.insert(index, new_panel)
                         index = index + 1
         else:
-            gridPos = panel["gridPos"].copy()
-            gridPos["y"] = y_axis
-            y_axis = y_axis + gridPos["h"]
-            panel["gridPos"] = gridPos
+            panel["gridPos"], y_axis  = update_panel_position_y(panel['gridPos'], y_axis)
             new_panels.insert(index, panel)
             index = index + 1
     owner["panels"] = new_panels
 
+def links_csotr_to_all(override_element: List) -> List:
+    mappings: List[Tuple[str, str]] = list()
+    mappings.append(("var\-cstor_name=\$\{cstor_name\:text\}","var-cstor_name=.*"))
+    mappings.append(("var\-cstor_name=\$\{cstor_name\}","var-cstor_name=.*"))
+    mappings.append(("var\-cstor_name=\$cstor_name","var-cstor_name=.*"))
+    mappings.append(("var\-cstor_ip=\$\{cstor_ip\:text\}","var-cstor_ip=.*"))
+    mappings.append(("var\-cstor_ip=\$\{cstor_ip\}","var-cstor_ip=.*"))
+    mappings.append(("var\-cstor_ip=\$cstor_ip","var-cstor_ip=.*"))
+    overrides_update_links(override_element, mappings)
+    return override_element
 
 class GlobalMergedCollectorConverter(AbstractDashboardEditor):
 
@@ -369,21 +287,19 @@ class GlobalMergedCollectorConverter(AbstractDashboardEditor):
         converted_dashboards: List[Tuple[Dict, Optional[str]]] = list()
         with open(file, "r") as dash_json:
             dash_obj: Dict = json.load(dash_json)
-            converted_dashboards.append((GlobalMergedCollectorConverter.from_object(dash_obj), file))
+            converted_dashboards.append((GlobalMergedCollectorConverter.from_object(dash_obj), os.path.basename(file)))
             return converted_dashboards
     
     @staticmethod
     def from_object(dash_obj: Dict) -> Dict:
         if not dash_obj: 
             raise DashboardTransformError('The dashboard to convert is empty. Please check the passed in dashboard.')
-        remove_nm_dash(dash_obj)
-        if 'templating' in dash_obj.keys():
+        remove_nm_from_dash(dash_obj)
+        if 'templating' in dash_obj.keys() and 'list' in dash_obj["templating"]:
             variables = dash_obj["templating"]["list"]
             convert_variables(variables)
-        if 'panels' in dash_obj.keys():
-            panels = dash_obj["panels"]
-            convert_panels(dash_obj, panels, 0)
-        # TODO: fix the temparory always True
+        if 'panels' in dash_obj.keys() and dash_obj["panels"]:
+            convert_panels(dash_obj, dash_obj["panels"], 0)
         return dash_obj
 
 if __name__ == '__main__':

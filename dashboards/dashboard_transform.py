@@ -58,9 +58,9 @@ def convert_folder(folder_in: str, folder_out: str, converters: List[AbstractDas
             except DashboardTransformError as te:
                 print_error(f"DashboardTransformError converting file {child}: {te}")
                 continue
-            except Exception as e:
-                print_error(f"Exception converting file {child}: {e}")
-                continue
+            # except Exception as e:
+            #     print_error(f"Exception converting file {child}: {e}")
+            #     continue
     if file_processed[key_file_count] > 0:
         print(f'{"Merged Collector" if "merged" in file_processed[key_converter].lower() else "Separate Collector"}: {file_processed[key_file_count]} dashboards converted to global dashboards for folder: {folder_in}.')
 
@@ -73,7 +73,7 @@ def dashboard_to_file(dash_obj: Dict, output_path: str, dash_sub_path_to_file: s
         os.makedirs(path, exist_ok=True)
     with open(output_full, "w") as f:
         json.dump(dash_obj, f, indent=2)
-        print(f'Write to file {output_full}')
+        # print(f'Write to file {output_full}')
 
 
 def collector_to_global(folder_in: str, folder_out: str) -> None:
@@ -127,12 +127,12 @@ def convert_to_global_dashboards(args: List[str]) -> None:
             folder_out = args[1]
         else:
             folder_out = args[2]
-
     # remove the root output path if using default path (for dev testing) if exists (usually from previous run)
     if folder_out is None:
         folder_out = folder_in+"/"+CONVERTED_PATH_NAME
         if os.path.exists(folder_out):
             shutil.rmtree(folder_out)
+    collector_to_global(folder_in, folder_out)
 
 def conver_to_application_dashboards(args: List[str]) -> None:
     template_file = args[1]
@@ -150,8 +150,8 @@ def main():
     sys.argv[1]: the path to the input folder with dashboards to convert.
     sys.argv[2]: the path to write the converted files to.
     """
-    # collector_to_global(sys.argv)
-    conver_to_application_dashboards(sys.argv)
+    convert_to_global_dashboards(sys.argv)
+    # conver_to_application_dashboards(sys.argv)
 
 if __name__ == "__main__":
     main()

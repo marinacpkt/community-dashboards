@@ -4,7 +4,7 @@ import copy
 from typing import Dict, List, Optional, Tuple
 from dashboards.shared.commons import AbstractDashboardEditor, DashboardTransformError, get_ds_name
 from dashboards.shared.constants import DS_IGNORED, KEY_DATASOURCE, KEY_TITLE, KEY_UID
-from dashboards.convert.collectorconverter.collector_config import COLLECTOR_MAPPINGS, FOLDERS_WITH_SEPARATE_GLOBAL_DASHBOARDS, COPY_FORWARD_ORIGINAL, OUTPUT_FOLDER_PER_COLLECTOR
+from dashboards.convert.collectorconverter.collector_config import COLLECTOR_MAPPINGS, FOLDERS_WITH_SEPARATE_GLOBAL_DASHBOARDS, COPY_FORWARD_ORIGINAL, OUTPUT_FOLDER_PER_COLLECTOR, get_local_collector_label
 
 
 def replace_datasource(datasource_object: Dict, datasource_mapping: Dict) -> None:
@@ -53,14 +53,14 @@ class GlobalPerCollectorConverter(AbstractDashboardEditor):
         return converted_dashboards
 
     @staticmethod
-    def traverse_update_global_separate(dash_element: Dict, datasource_mapping: Dict) -> None:
+    def traverse_update_global_separate(dash_element: Dict | Dict, datasource_mapping: Dict) -> None:
         """Traversing the passed in dashboard recursively and update as needed: root is dashboard root.
         """
         if isinstance(dash_element, Dict):
-            if KEY_DATASOURCE in dash_element.keys():
-                replace_datasource(dash_element, datasource_mapping)
             for value in dash_element.values():
                 GlobalPerCollectorConverter.traverse_update_global_separate(value, datasource_mapping)
+            if KEY_DATASOURCE in dash_element.keys():
+                replace_datasource(dash_element, datasource_mapping)
         elif isinstance(dash_element, List):
             for item in dash_element:
                 GlobalPerCollectorConverter.traverse_update_global_separate(item, datasource_mapping)
@@ -72,16 +72,17 @@ class GlobalPerCollectorConverter(AbstractDashboardEditor):
             raise DashboardTransformError('The dashboard passed in is None. Please check the passed in dashboard')
         converted_dashboards: List[Tuple[Dict, Optional[str]]] = list()
         for collector_key, collector in COLLECTOR_MAPPINGS.items():
-            label: str = collector[0]
+            label_mapping: Dict[str, str] = collector[0]
             datasource_mapping: Dict = collector[1]
             dash_obj_copy: Dict = copy.deepcopy(dash_obj)
-            dash_obj_copy[KEY_TITLE] = f"{dash_obj_copy[KEY_TITLE]} - {label}"
+            new_label = label_mapping[get_local_collector_label()]
+            dash_obj_copy[KEY_TITLE] = f"{dash_obj_copy[KEY_TITLE]} - {new_label}"
             dash_obj_copy[KEY_UID] = f"{dash_obj_copy[KEY_UID]}_{collector_key}"
             GlobalPerCollectorConverter.traverse_update_global_separate(dash_obj_copy, datasource_mapping)
             collector_output_file = None
             if filename and len(filename) > 0 :
                 filename_copy = os.path.basename(filename).replace('.', f'_{collector_key}.')
-                collector_output_file =  f'{collector_key}_{label}/{filename_copy}' if OUTPUT_FOLDER_PER_COLLECTOR else filename_copy
+                collector_output_file =  f'{collector_key}_{new_label.lower()}/{filename_copy}' if OUTPUT_FOLDER_PER_COLLECTOR else filename_copy
             converted_dashboards.append((dash_obj_copy, collector_output_file))
         # write original file as is
         if COPY_FORWARD_ORIGINAL:
