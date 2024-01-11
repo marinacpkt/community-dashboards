@@ -1,26 +1,5 @@
-# Organize dashboard for conversion among them
-# hosts group
-KEY_HOSTS_GROUP = "key_hosts_group"
-LABEL_HOSTS_GROUP = ["Hosts Group"]
-SCHEMA_TAG_HOSTS_GROUP = "hosts_group"
-# custom application
-KEY_CUSTOM_APPLICATION = "key_custom_application"
-LABEL_CUSTOM_APPLICATION = ["Custom Application", "Application"]
-SCHEMA_TAG_CUSTOM_APPLICATION = "custom_application"
-# sni name
-KEY_TLS_DOMAIN = "key_tls_domain"
-LABEL_TLS_DOMAIN = ["SNI Name"]
-SCHEMA_TAG_TLS_DOMAIN = "tls_domain"
-# cname
-KEY_CNAME_DOMAIN = "key_cname_domain"
-LABEL_CNAME_DOMAIN = ["Canonical Name"]
-SCHEMA_TAG_CNAME_DOMAIN = "cname_domain"
-DASHBOARD_SETS_APPLICATIONS = {
-    KEY_HOSTS_GROUP: (LABEL_HOSTS_GROUP, SCHEMA_TAG_HOSTS_GROUP),
-    KEY_CUSTOM_APPLICATION: (LABEL_CUSTOM_APPLICATION, SCHEMA_TAG_CUSTOM_APPLICATION),
-    KEY_TLS_DOMAIN: (LABEL_TLS_DOMAIN, SCHEMA_TAG_TLS_DOMAIN),
-    KEY_CNAME_DOMAIN: (LABEL_CNAME_DOMAIN, SCHEMA_TAG_CNAME_DOMAIN),
-}
+LOGICAL_OR = 'OR'
+LOGICAL_AND = 'AND'
 #
 DS_INDICATORS = {"type": "influxdb", "uid": "indicators"}
 DS_IGNORED = ("grafana", "mixed", "dashboard")

@@ -1,0 +1,141 @@
+/*
+  NOTE to: 
+  1. Include uid mappings in dashboard links
+  2. Add datasource mappings
+  3. Redesign text search and replace schema....
+*/
+{
+  "templates": [
+    {
+      "name": "Application Dashboard",
+      "description": "To genearate application dashboards from a template dashboard.",
+      "from": {
+        "uid": "application_overview_flows",
+        "filename": "application_overview_flows.json",
+        "value_replace": [
+          {
+            "key": "search1",
+            "elements": {
+              "condition": "include",
+              "list": [
+                "all"
+              ]
+            },
+            "values": {
+              "value1": "Custom Application",
+              "value2": "Application"
+            }
+          },
+          {
+            "key": "search2",
+            "elements": {
+              "condition": "include",
+              "list": [
+                "all"
+              ]
+            },
+            "values": {
+              "value1": "custom_application"
+            }
+          }
+        ]
+      },
+      "to": [
+        {
+          "uid": "hosts_group_overvew_flows",
+          "filename": "hosts_group_overview_flows.json",
+          "value_replace": [
+            {
+              "key": "search1",
+              "values": {
+                "value1": "Hosts Group",
+                "value2": "Hosts Group"
+              }
+            },
+            {
+              "key": "search2",
+              "values": {
+                "value1": "hosts_group"
+              }
+            }
+          ]
+        },
+        {
+          "uid": "tls_domain_overvew_flows",
+          "filename": "tls_domain_overview_flows.json",
+          "value_replace": [
+            {
+              "key": "search1",
+              "values": {
+                "value1": "SNI Name",
+                "value2": "SNI Name"
+              }
+            },
+            {
+              "key": "search2",
+              "values": {
+                "value1": "tls_domain"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IPs for an Application Dashboards",
+      "description": "To genearate IPs for an application dashboards from a template dashboard.",
+      "from": {
+        "uid": "ips_for_an_application_flows",
+        "filename": "application_overview_flows.json",
+        "searches": [
+          {
+            "key": "search1",
+            "elements": {
+              "condition": "include",
+              "list": [
+                "all"
+              ]
+            },
+            "values": {
+              "value1": "Custom Application",
+              "value2": "Application"
+            }
+          },
+          {
+            "key": "search2",
+            "elements": {
+              "condition": "include",
+              "list": [
+                "all"
+              ]
+            },
+            "values": {
+              "value1": "custom_application"
+            }
+          }
+        ]
+      },
+      "to": [
+        {
+          "uid": "ips_for_an_application_flows",
+          "filename": "hosts_group_overview_flows.json",
+          "replaces": [
+            {
+              "key": "search1",
+              "values": {
+                "value1": "Hosts Group",
+                "value2": "Hosts Group"
+              }
+            },
+            {
+              "key": "search2",
+              "values": {
+                "value1": "hosts_group"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

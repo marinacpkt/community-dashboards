@@ -1,0 +1,77 @@
+/* 
+Needed only when creating from files.
+Future goal is to:
+1. Gather datasource mapping information from API calls to cclear and each collectors
+2. Take text mappings from API parameters.
+*/
+{
+  "cclear": {
+    "key": "hkex",    // For identifying cclear vs collector and mappings between the two.
+    "text": {         // For: 1. Adding 'name' to identify cclear vs collectors; 2. Search and replace between cclear and collectors 
+      "name": "HKEx"  // Added to cclear title and panel titles. Replaced in collector dashboards.
+      // More mappings can be added as <key:value> pair. 
+      // Key name can be any str as long as matching between cclear and collectors
+      // e.g. "label1": ""
+    },
+    "datasources": {  // For mapping datasources between cclear and collectors.
+      "applications": "applications",
+      "dhcp": "dhcp",
+      "dns": "dns",
+      "flows": "flows",
+      "https": "https",
+      "icmp": "icmp",
+      "indicators": "indicators",
+      "tcp": "tcp",
+      "ip_map": "ip_map",
+      "sys": "sys",
+      "influxdb_health": "influxdb_health"
+      // More mappings can be added as <key:value> pair. 
+      // Key name can be any str as long as matching between cclear and collectors
+      // e.g. "datasource_more": ""
+    }
+  },
+  "collectors": [
+    {
+      "key": "hk3",
+      "text": {
+        "name": "HK3"
+        // e.g. "label1": ""
+      },
+      "datasources": {
+        "applications": "hk3_applications",
+        "dhcp": "hk3_dhcp",
+        "dns": "hk3_dns",
+        "flows": "hk3_flows",
+        "https": "hk3_https",
+        "icmp": "hk3_icmp",
+        "indicators": "hk3_indicators",
+        "tcp": "hk3_tcp",
+        "ip_map": "hk3_ip_map",
+        "sys": "hk3_sys",
+        "influxdb_health": "hk3_influxdb_health"
+        // e.g. "datasource_more": ""
+      }
+    },
+    {
+      "key": "fdc2",
+      "text": {
+        "name": "FDC2"
+        // e.g. "label1": ""
+      },
+      "datasources": {
+        "applications": "fdc2_applications",
+        "dhcp": "fdc2_dhcp",
+        "dns": "fdc2_dns",
+        "flows": "fdc2_flows",
+        "https": "fdc2_https",
+        "icmp": "fdc2_icmp",
+        "indicators": "fdc2_indicators",
+        "tcp": "fdc2_tcp",
+        "ip_map": "fdc2_ip_map",
+        "sys": "fdc2_sys",
+        "influxdb_health": "fdc2_influxdb_health"
+        // e.g. "datasource_more": ""
+      }
+    }
+  ]
+}
