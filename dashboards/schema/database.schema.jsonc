@@ -1,1 +1,433 @@
-// Define database schema info for composing SQL queries and Grafana panel transformations
+{
+    "datasource": "tcp",
+    "database": "tcp",
+    "timeslice": {
+        "ip_measurements": [
+            "tcp_timeslice_summary_server_ip",
+            "tcp_timeslice_summary_client_ip"
+        ],
+        "measurements": {
+            "tcp_timeslice_summary_server_ip": {
+                "keys": {
+                    "ip": [
+                        "IP",
+                        "Server IP",
+                        "server_ip"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "city",
+                    "cname_domain",
+                    "cname_fqdn",
+                    "cname_hostname",
+                    "country",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "custom_application",
+                    "cvu_id",
+                    "cvu_port",
+                    "exclude",
+                    "hosts_group",
+                    "ip",
+                    "ip_type",
+                    "latitude",
+                    "longitude",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "rdns_domain",
+                    "rdns_fqdn",
+                    "rdns_hostname",
+                    "tls_domain",
+                    "tls_fqdn",
+                    "tls_hostname",
+                    "vlan_tag_inner",
+                    "vlan_tag_outer"
+                ]
+            },
+            "tcp_timeslice_summary_client_ip": {
+                "keys": {
+                    "ip": [
+                        "IP",
+                        "Client IP",
+                        "client_ip"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "city",
+                    "cname_domain",
+                    "cname_fqdn",
+                    "cname_hostname",
+                    "country",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "custom_application",
+                    "cvu_id",
+                    "cvu_port",
+                    "exclude",
+                    "hosts_group",
+                    "ip",
+                    "ip_type",
+                    "latitude",
+                    "longitude",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "rdns_domain",
+                    "rdns_fqdn",
+                    "rdns_hostname",
+                    "tls_domain",
+                    "tls_fqdn",
+                    "tls_hostname",
+                    "vlan_tag_inner",
+                    "vlan_tag_outer"
+                ]
+            },
+            "tcp_timeslice_summary_application_port": {
+                "keys": {
+                    "application_port": [
+                        "Nework Port",
+                        "Network Application",
+                        "Port",
+                        "Port Number"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name"
+                ]
+            },
+            "tcp_timeslice_summary_vlan_tag_outer": {
+                "keys": {
+                    "vlan_tag_outer": [
+                        "VLAN",
+                        "Outer VLAN",
+                        "VLAN Outer"
+                    ],
+                    "vlan_tag_inner": [
+                        "VLAN",
+                        "Inner VLAN",
+                        "VLAN Inner"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "vlan_tag_inner",
+                    "vlan_tag_outer"
+                ]
+            },
+            "tcp_timeslice_summary_hosts_group": {
+                "keys": {
+                    "client_hosts_group": [
+                        "Hosts Group",
+                        "Hosts Groups",
+                        "Client Hosts Groups",
+                        "Client Hosts Group"
+                    ],
+                    "server_hosts_group": [
+                        "Hosts Group",
+                        "Hosts Groups",
+                        "Server Hosts Groups",
+                        "Server Hosts Group"
+                    ]
+                },
+                "tags": [
+                    "client_hosts_group",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "server_hosts_group"
+                ]
+            },
+            "tcp_timeslice_summary_custom_application": {
+                "keys": {
+                    "server_custom_application": [
+                        "Custom Application",
+                        "Custom Applications",
+                        "Server Custom Application",
+                        "Server Custom Applications"
+                    ],
+                    "client_custom_application": [
+                        "Custom Application",
+                        "Custom Applications",
+                        "Client Custom Application",
+                        "Client Custom Applications"
+                    ]
+                },
+                "tags": [
+                    "client_custom_application",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "server_custom_application"
+                ]
+            },
+            "tcp_timeslice_summary_tls_domain": {
+                "keys": {},
+                "tags": []
+            },
+            "tcp_timeslice_summary_cname_domain": {
+                "keys": {},
+                "tags": []
+            }
+        },
+        "fields": [
+            "active_sessions",
+            "bytes_client",
+            "bytes_server",
+            "connection_established",
+            "duplicates_client",
+            "duplicates_server",
+            "finished_sessions",
+            "fins_client",
+            "fins_server",
+            "fragments_client",
+            "fragments_server",
+            "gaps_client",
+            "gaps_server",
+            "mtu_client",
+            "mtu_server",
+            "packets",
+            "packets_client",
+            "packets_server",
+            "resets_client",
+            "resets_server",
+            "resolution_s",
+            "response_time_s",
+            "retransmissions_client",
+            "retransmissions_server",
+            "rtt_client_s",
+            "rtt_server_s",
+            "sequence_errors_client",
+            "sequence_errors_server",
+            "synacks",
+            "syns",
+            "timeout_sessions",
+            "zwins_client",
+            "zwins_server"
+        ]
+    },
+    "open": {
+        "ip_measurements": [
+            "tcp_open_summary_server_ip",
+            "tcp_open_summary_client_ip"
+        ],
+        "measurements": {
+            "tcp_open_summary_server_ip": {
+                "keys": {
+                    "ip": [
+                        "IP",
+                        "Server IP",
+                        "server_ip"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "city",
+                    "cname_domain",
+                    "cname_fqdn",
+                    "cname_hostname",
+                    "country",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "custom_application",
+                    "cvu_id",
+                    "cvu_port",
+                    "exclude",
+                    "hosts_group",
+                    "ip",
+                    "ip_type",
+                    "latitude",
+                    "longitude",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "rdns_domain",
+                    "rdns_fqdn",
+                    "rdns_hostname",
+                    "tls_domain",
+                    "tls_fqdn",
+                    "tls_hostname",
+                    "vlan_tag_inner",
+                    "vlan_tag_outer"
+                ]
+            },
+            "tcp_open_summary_client_ip": {
+                "keys": {
+                    "ip": [
+                        "IP",
+                        "Server IP",
+                        "server_ip"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "city",
+                    "cname_domain",
+                    "cname_fqdn",
+                    "cname_hostname",
+                    "country",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "custom_application",
+                    "cvu_id",
+                    "cvu_port",
+                    "exclude",
+                    "hosts_group",
+                    "ip",
+                    "ip_type",
+                    "latitude",
+                    "longitude",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "rdns_domain",
+                    "rdns_fqdn",
+                    "rdns_hostname",
+                    "tls_domain",
+                    "tls_fqdn",
+                    "tls_hostname",
+                    "vlan_tag_inner",
+                    "vlan_tag_outer"
+                ]
+            },
+            "tcp_open_summary_application_port": {
+                "keys": {
+                    "application_port": [
+                        "Nework Port",
+                        "Network Application",
+                        "Port",
+                        "Port Number"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name"
+                ]
+            },
+            "tcp_open_summary_vlan_tag_outer": {
+                "keys": {
+                    "vlan_tag_outer": [
+                        "VLAN",
+                        "Outer VLAN",
+                        "VLAN Outer"
+                    ],
+                    "vlan_tag_inner": [
+                        "VLAN",
+                        "Inner VLAN",
+                        "VLAN Inner"
+                    ]
+                },
+                "tags": [
+                    "application_port",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "vlan_tag_inner",
+                    "vlan_tag_outer"
+                ]
+            },
+            "tcp_open_summary_hosts_group": {
+                "keys": {
+                    "client_hosts_group": [
+                        "Hosts Group",
+                        "Hosts Groups",
+                        "Client Hosts Groups",
+                        "Client Hosts Group"
+                    ],
+                    "server_hosts_group": [
+                        "Hosts Group",
+                        "Hosts Groups",
+                        "Server Hosts Groups",
+                        "Server Hosts Group"
+                    ]
+                },
+                "tags": [
+                    "client_hosts_group",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "server_hosts_group"
+                ]
+            },
+            "tcp_open_summary_custom_application": {
+                "keys": {
+                    "server_custom_application": [
+                        "Custom Application",
+                        "Custom Applications",
+                        "Server Custom Application",
+                        "Server Custom Applications"
+                    ],
+                    "client_custom_application": [
+                        "Custom Application",
+                        "Custom Applications",
+                        "Client Custom Application",
+                        "Client Custom Applications"
+                    ]
+                },
+                "tags": [
+                    "client_custom_application",
+                    "cstor_id",
+                    "cstor_ip",
+                    "cstor_name",
+                    "network_monitor_cidr",
+                    "network_monitor_name",
+                    "server_custom_application"
+                ]
+            },
+            "tcp_open_summary_tls_domain": {
+                "keys": {},
+                "tags": []
+            },
+            "tcp_open_summary_cname_domain": {
+                "keys": {},
+                "tags": []
+            }
+        },
+        "fields": [
+            "active_sessions",
+            "bytes_client_session_max",
+            "bytes_server_session_max",
+            "connection_established",
+            "duration_s_max",
+            "idle_s_max",
+            "min_win_client_session",
+            "min_win_server_session",
+            "missing_syns",
+            "mtu_client_session",
+            "mtu_server_session",
+            "new_sessions",
+            "packets_client_session_max",
+            "packets_server_session_max",
+            "resolution_s",
+            "response_time_s_max",
+            "syn_failures",
+            "wss_client_session",
+            "wss_server_session",
+            "zero_bytes_sessions"
+        ]
+    }
+}
