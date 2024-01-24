@@ -628,7 +628,7 @@
             ],
             "thresholds": [],
             "timeRegions": [],
-            "title": "Client <-> Server - ${tcp_metric:text}",
+            "title": "Client <-> Server",
             "tooltip": {
                 "shared": true,
                 "sort": 2,
@@ -2194,9 +2194,13 @@
     ],
     "variable": {
         "current": {
-            "selected": false,
-            "text": "",
-            "value": ""
+          "selected": false,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
             "type": "influxdb",
@@ -2204,9 +2208,9 @@
         },
         "definition": "",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "cStor",
-        "multi": false,
+        "multi": true,
         "name": "cstor_name",
         "options": [],
         "query": "SHOW TAG VALUES FROM \"tcp_timeslice_summary_application_port\" WITH KEY = \"cstor_name\"",

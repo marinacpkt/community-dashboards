@@ -1,8 +1,13 @@
 
 import copy
 import json
+import os
+from pathlib import Path
 import re
 import uuid
+
+from dotenv import load_dotenv
+import requests
 from dashboards.editor.database import Database
 from typing import Dict, List, Optional, Tuple, Any
 
@@ -23,30 +28,53 @@ class DashboardCreator:
     def _get_dashboard_schema(self) -> Dict[str, Any]:
         file = "/Users/mzheng/Work/community-dashboards/dashboards/schema/dashboard.schema.json"
         with open(file, 'r') as f:
-            # content = f.read()
-            # content = re.sub(r'//.*?\n|/\*.*?\*/', '', content, flags=re.S)
             schema = json.load(f)
         return schema
     
     def _get_dashboard_template(self) -> Dict[str, Any]:
         file = "/Users/mzheng/Work/community-dashboards/dashboards/schema/elements/template_dashboard.json"
         with open(file, 'r') as f:
-            # content = f.read()
-            # content = re.sub(r'//.*?\n|/\*.*?\*/', '', content, flags=re.S)
             dashboard = json.load(f)
         return dashboard
 
     def create(self, metrics: List[str], tag_key, filter = None):
         measurements: Dict[str, Tuple[Optional[List[Tuple[str, List[str]]]], Optional[List[str]]]] = self._db.get_schema(metrics, tag_key, filter)  
         dashboard: Optional[Dict] = self.create_dashboard(tag_key, measurements, filter)
-        if dashboard:
-            with open("/Users/mzheng/Work/community-dashboards/dashboards/editor/new_dashboard.json", "w") as f:
-                json.dump(dashboard, f, indent=2)
-                f.write('\n')
+        # if dashboard:
+        #     with open("/Users/mzheng/Work/community-dashboards/dashboards/editor/new_dashboard.json", "w") as f:
+        #         json.dump(dashboard, f, indent=2)
+        #         f.write('\n')
         # TODO
-        # create dashboard with template and panels
         # call Grafana API to create dashboard
+        if dashboard:
+            self.push_dashboard(dashboard)
         # return dashboard link
+    
+    def push_dashboard(self, dashboard: Dict) -> None:
+        # print('Load dotenv: ', load_dotenv(dotenv_path=Path("env")))
+        self.__USER = os.getenv("GRAFANA_USER")
+        self.__PW = os.getenv("GRAFANA_PW")
+        if not self.__USER or not self.__PW:
+            raise Exception('Grafana GRAFANA_USER and GRAFANA_PW not set in env file')
+        self.host_ip = "10.51.10.204"
+        self.folder_id = 466
+        self.dashboard = dashboard
+        self.overwrite = False
+        self.url = f'https://{self.__USER}:{self.__PW}@{self.host_ip}/graph-engine/api/dashboards/db'
+        post_data = {
+            # 'folderID': self.folder_id
+                     "folderUid": "a412efba-d02d-41b0-8afc-57670464b375"
+                     , 'dashboard': self.dashboard
+                     , "message": f"Upload of {self.dashboard['title']}"
+                     , "overwrite": self.overwrite}
+        
+        headers = {'Content-type': 'application/json'}
+        response = requests.post(url=self.url
+                                , data=json.dumps(post_data)
+                                , headers=headers
+                                , verify=False)
+        print(response.status_code)
+        print(response.text)
     
     def create_dashboard(self, key, measurements: Dict[str, Tuple[Optional[List[Tuple[str, List[str]]]], Optional[List[str]]]], filter = None) -> Optional[Dict]:
         """
@@ -79,6 +107,9 @@ class DashboardCreator:
                     arr_alias.append(f'$tag_{tag}')
                     if filter:
                         arr_where.append(f'"{tag}" =~ /^{filter}$/')
+                    else:
+                        name = re.sub(" ", "_", key)
+                        arr_where.append(f'"{tag}" =~ /^${name}$/')
                 groupby_sql = ', '.join(arr_groupy)
                 where_sql = ' Or '.join(arr_where)
                 where_sql = f' AND ({where_sql})' if where_sql else ''
@@ -97,14 +128,23 @@ class DashboardCreator:
                 target['alias'] = alias_sql
                 target['query'] = sql
                 panels.append(new_panel)
-            # filter with ip TODO
+            # filter with ip
             if filter:
                 if self._is_ip_dashboard(measurements):
-                    # ip panels: add on demand download
-                    # TODO: fix 4 tuple graph and table variables and apply from inputs
                     ondemand_panels: List[Dict] = schema['ondemand']
                     ondemand_panels[0]['options']['cidr'] = filter
+                    # graph panel
+                    where_on_demand = f'AND ("client_ip" =~ /^${filter}$/ OR "server_ip" =~ /^${filter}$/)'
                     ondemand_panels[1]['title'] = f'Client <-> Server - {metric}'
+                    graph_targets = ondemand_panels[1]['targets']
+                    graph_targets[0]['query'] = f'SELECT sum("{metric}") FROM "tcp_timeslice_4_tuple" {WHERE} {where_on_demand} {GROUPBY}, {groupby_sql} fill(none)'
+                    graph_targets[1]['query'] = f'SELECT sum("{metric}") FROM "tcp_open_4_tuple" {WHERE} {where_on_demand} {GROUPBY}, {groupby_sql} fill(none)'
+                    # timeslice table
+                    ondemand_panels[2]['title'] = f'Timeslice: Client <-> Server - {metric}'
+                    ondemand_panels[2]['targets'][0]['query'] = f'SELECT sum("{metric}") FROM "tcp_timeslice_4_tuple" {WHERE} {where_on_demand} GROUP BY {groupby_sql} fill(none)'
+                    # open table
+                    ondemand_panels[3]['title'] = f'Open: Client <-> Server - {metric}'
+                    ondemand_panels[3]['targets'][0]['query'] = f'SELECT sum("{metric}") FROM "tcp_open_4_tuple" {WHERE} {where_on_demand} GROUP BY {groupby_sql} fill(none)'
                     for on_panel in ondemand_panels:
                         panels.append(on_panel)
                 else:
@@ -133,11 +173,10 @@ class DashboardCreator:
                     pass
             else:
                 # add template variable
-                # TODO: apply variable to queries, name it properly
                 if not self._is_ip_dashboard(measurements):
                     variable: Dict = schema['variable']
                     variable['label'] = key
-                    variable['name'] = key
+                    variable['name'] = name
                     variable['query'] = f'SHOW TAG VALUES FROM "{m_name}" WITH KEY IN ({groupby_sql})'
                     dashboard['templating']['list'].append(variable)
         return dashboard
@@ -158,4 +197,6 @@ if __name__ == "__main__":
     file = "/Users/mzheng/Work/community-dashboards/dashboards/schema/database.schema.jsonc"
     db: Database = Database(file)
     creator: DashboardCreator = DashboardCreator(db)
-    creator.create(["bytes_server"], "custom application", "Core servers")
+    # creator.create(["bytes_server"], "custom application")
+    # creator.create(["bytes_server"], "custom application", "Core servers")
+    creator.create(["bytes_server"], "IP", "10.51.10.182")
