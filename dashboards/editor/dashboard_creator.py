@@ -2,11 +2,9 @@
 import copy
 import json
 import os
-from pathlib import Path
 import re
 import uuid
-
-from dotenv import load_dotenv
+import webbrowser
 import requests
 from dashboards.editor.database import Database
 from typing import Dict, List, Optional, Tuple, Any
@@ -40,17 +38,16 @@ class DashboardCreator:
     def create(self, metrics: List[str], tag_key, filter = None):
         measurements: Dict[str, Tuple[Optional[List[Tuple[str, List[str]]]], Optional[List[str]]]] = self._db.get_schema(metrics, tag_key, filter)  
         dashboard: Optional[Dict] = self.create_dashboard(tag_key, measurements, filter)
-        # if dashboard:
-        #     with open("/Users/mzheng/Work/community-dashboards/dashboards/editor/new_dashboard.json", "w") as f:
-        #         json.dump(dashboard, f, indent=2)
-        #         f.write('\n')
-        # TODO
-        # call Grafana API to create dashboard
+
         if dashboard:
-            self.push_dashboard(dashboard)
+            response_text = self.push_dashboard(dashboard)
         # return dashboard link
+        if response_text:
+            text: Dict[str, str] = json.loads(response_text)
+            url = f'https://{self.host_ip}/graph-engine/d/{text["uid"]}/{dashboard["title"]}' # type: ignore
+            webbrowser.open_new_tab(url)
     
-    def push_dashboard(self, dashboard: Dict) -> None:
+    def push_dashboard(self, dashboard: Dict) -> str:
         # print('Load dotenv: ', load_dotenv(dotenv_path=Path("env")))
         self.__USER = os.getenv("GRAFANA_USER")
         self.__PW = os.getenv("GRAFANA_PW")
@@ -59,11 +56,13 @@ class DashboardCreator:
         self.host_ip = "10.51.10.204"
         self.folder_id = 466
         self.dashboard = dashboard
-        self.overwrite = False
+        self.dashboard['id'] = None
+        self.dashboard['uid'] = None
+        self.overwrite = True
         self.url = f'https://{self.__USER}:{self.__PW}@{self.host_ip}/graph-engine/api/dashboards/db'
         post_data = {
-            # 'folderID': self.folder_id
-                     "folderUid": "a412efba-d02d-41b0-8afc-57670464b375"
+            'folderID': self.folder_id
+                    #  "folderUid": "a412efba-d02d-41b0-8afc-57670464b375"
                      , 'dashboard': self.dashboard
                      , "message": f"Upload of {self.dashboard['title']}"
                      , "overwrite": self.overwrite}
@@ -73,8 +72,7 @@ class DashboardCreator:
                                 , data=json.dumps(post_data)
                                 , headers=headers
                                 , verify=False)
-        print(response.status_code)
-        print(response.text)
+        return response.text
     
     def create_dashboard(self, key, measurements: Dict[str, Tuple[Optional[List[Tuple[str, List[str]]]], Optional[List[str]]]], filter = None) -> Optional[Dict]:
         """
@@ -84,7 +82,7 @@ class DashboardCreator:
             return None
         # dashboard
         dashboard: Dict = self._get_dashboard_template()
-        dashboard['title'] = key
+        dashboard['title'] = f'{key} {" - " + filter if filter else ""}'
         dashboard['panels'][2]['title'] = f'{key} {": "+ filter if filter else ""}'
         dashboard['uid'] = uuid.uuid4().hex
         # panels
@@ -108,8 +106,9 @@ class DashboardCreator:
                     if filter:
                         arr_where.append(f'"{tag}" =~ /^{filter}$/')
                     else:
-                        name = re.sub(" ", "_", key)
-                        arr_where.append(f'"{tag}" =~ /^${name}$/')
+                        if not self._is_ip_dashboard(measurements):
+                            name = re.sub(" ", "_", key)
+                            arr_where.append(f'"{tag}" =~ /^${name}$/')
                 groupby_sql = ', '.join(arr_groupy)
                 where_sql = ' Or '.join(arr_where)
                 where_sql = f' AND ({where_sql})' if where_sql else ''
@@ -133,18 +132,19 @@ class DashboardCreator:
                 if self._is_ip_dashboard(measurements):
                     ondemand_panels: List[Dict] = schema['ondemand']
                     ondemand_panels[0]['options']['cidr'] = filter
+                    ondemand_panels[0]['title'] = f'Analytics Data Retrieval - {filter}'
                     # graph panel
-                    where_on_demand = f'AND ("client_ip" =~ /^${filter}$/ OR "server_ip" =~ /^${filter}$/)'
+                    where_on_demand = f'AND ("client_ip" =~ /^{filter}$/ OR "server_ip" =~ /^{filter}$/)'
                     ondemand_panels[1]['title'] = f'Client <-> Server - {metric}'
                     graph_targets = ondemand_panels[1]['targets']
-                    graph_targets[0]['query'] = f'SELECT sum("{metric}") FROM "tcp_timeslice_4_tuple" {WHERE} {where_on_demand} {GROUPBY}, {groupby_sql} fill(none)'
-                    graph_targets[1]['query'] = f'SELECT sum("{metric}") FROM "tcp_open_4_tuple" {WHERE} {where_on_demand} {GROUPBY}, {groupby_sql} fill(none)'
+                    graph_targets[0]['query'] = f'SELECT sum("{metric}") FROM "tcp_timeslice_4_tuple" {WHERE} {where_on_demand} {GROUPBY}, "server_ip", "client_ip"  fill(none)'
+                    graph_targets[1]['query'] = f'SELECT sum("{metric}") FROM "tcp_open_4_tuple" {WHERE} {where_on_demand} {GROUPBY}, "server_ip", "client_ip"  fill(none)'
                     # timeslice table
                     ondemand_panels[2]['title'] = f'Timeslice: Client <-> Server - {metric}'
-                    ondemand_panels[2]['targets'][0]['query'] = f'SELECT sum("{metric}") FROM "tcp_timeslice_4_tuple" {WHERE} {where_on_demand} GROUP BY {groupby_sql} fill(none)'
+                    ondemand_panels[2]['targets'][0]['query'] = f'SELECT sum("{metric}") FROM "tcp_timeslice_4_tuple" {WHERE} {where_on_demand} GROUP BY "server_ip", "client_ip" fill(none)'
                     # open table
                     ondemand_panels[3]['title'] = f'Open: Client <-> Server - {metric}'
-                    ondemand_panels[3]['targets'][0]['query'] = f'SELECT sum("{metric}") FROM "tcp_open_4_tuple" {WHERE} {where_on_demand} GROUP BY {groupby_sql} fill(none)'
+                    ondemand_panels[3]['targets'][0]['query'] = f'SELECT sum("{metric}") FROM "tcp_open_4_tuple" {WHERE} {where_on_demand} GROUP BY "server_ip", "client_ip" fill(none)'
                     for on_panel in ondemand_panels:
                         panels.append(on_panel)
                 else:
@@ -170,7 +170,6 @@ class DashboardCreator:
                             ip_target['alias'] = "$tag_ip"
                             ip_target['query'] = sql
                             panels.append(ip_panel)
-                    pass
             else:
                 # add template variable
                 if not self._is_ip_dashboard(measurements):
@@ -197,6 +196,23 @@ if __name__ == "__main__":
     file = "/Users/mzheng/Work/community-dashboards/dashboards/schema/database.schema.jsonc"
     db: Database = Database(file)
     creator: DashboardCreator = DashboardCreator(db)
-    # creator.create(["bytes_server"], "custom application")
-    # creator.create(["bytes_server"], "custom application", "Core servers")
-    creator.create(["bytes_server"], "IP", "10.51.10.182")
+
+    # ip
+    creator.create(["bytes_server"], "IP")
+    creator.create(["bytes_server"], "IP", "10.50.251.51")                              # with IP filter
+
+    # custom applications
+    creator.create(["bytes_server"], "custom application")
+    creator.create(["retransmissions_server"], "custom application", "Core servers")    # with Application filter
+
+    # hosts group
+    creator.create(["bytes_server"], "hosts group")
+    creator.create(["retransmissions_server"], "hosts group", "mpt.cpacket")            # with Hosts Group filter
+
+    # vlans
+    creator.create(["bytes_server"], "outer vlan")
+    creator.create(["retransmissions_server"], "outer vlan", "1010")                    # with VLAN filter
+
+    # application_port
+    creator.create(["bytes_server"], "port")
+    creator.create(["retransmissions_server"], "port", "SSH")                           # with Port filter

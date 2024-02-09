@@ -297,5 +297,5 @@ def convert_to_application_dashboards(args: List[str]) -> None:
     converter.process(KEY_CUSTOM_APPLICATION)
 
 if __name__ == "__main__":
-    convert_to_global_dashboards(["", "/Users/mzheng/Workspace/grafana_publish/grafana-cclear-utility-bundle/src/assets/dashboards"])
-    # convert_to_application_dashboards(["", "/Users/mzheng/Work/community-dashboards/dashboards/test/Application_Overview.json"])
+    # convert_to_global_dashboards(["", "/Users/mzheng/Workspace/grafana_publish/grafana-cclear-utility-bundle/src/assets/dashboards"])
+    convert_to_application_dashboards(["", "/Users/mzheng/Work/community-dashboards/dashboards/test/application_monitored_metrics.json"])

@@ -19,21 +19,20 @@ class TemplateProcessor(AbstractProcessor):
             for value in element.values():
                 if isinstance(value, Dict|List):
                     self.traverse_update(value, label_mappings, schema_mapping)
-                else:   # value as: str|bool|int|float owned by a dictionary
-                    dict_item__replace_value_str_list(element, [KEY_TITLE,'query','byField', 'options', 'url', 'label', 'text', 'title'], label_mappings)
-                    dict_item__replace_value_str_list(element, [KEY_TITLE,'url', 'options'], [schema_mapping])
-                    dict_item__replace_value_str(element, 'query', schema_mapping)
-                    # TODO: more transform
-                    # ApplicationConverter.replace_key(dash_element, 'indexByName', schema_mapping)
-                    dict_dict_item__replace_key_list(element, 'indexByName', label_mappings)
-                    dict_item__replace_value_str(element, f'source_{schema_mapping[1]}', label_mappings[-1])
+                # else:   # value as: str|bool|int|float owned by a dictionary
+            dict_item__replace_value_str_list(element, [KEY_TITLE,'query','byField', 'options', 'url', 'label', 'text', 'renamePattern'], label_mappings)
+            dict_item__replace_value_str_list(element, [KEY_TITLE,'query', 'url', 'options', 'regex', 'alias', 'uid'], [schema_mapping])
+            # TODO: more transform
+            # ApplicationConverter.replace_key(dash_element, 'indexByName', schema_mapping)
+            dict_dict_item__replace_key_list(element, 'indexByName', label_mappings)
+            dict_item__replace_value_str(element, f'source_{schema_mapping[1]}', label_mappings[-1])
         elif isinstance(element, list):
             for item in element:
-                if isinstance(item, Dict) is isinstance(element, List):
+                if isinstance(item, List|Dict):
                     self.traverse_update(item, label_mappings, schema_mapping)
                 else: # item as: str|bool|int|float owned by a list
                     dict_item__replace_value_str_list(item, [KEY_TITLE,'query','byField', 'options', 'url', 'label', 'text'], label_mappings)
-                    dict_item__replace_value_str(item, 'query', schema_mapping)
+                    dict_item__replace_value_str_list(item,  ['query', 'url'], [schema_mapping])
                     # TODO: more transform
                     # ApplicationConverter.replace_key(dash_element, 'indexByName', schema_mapping)
                     dict_dict_item__replace_key_list(item, 'indexByName', label_mappings)

@@ -61,28 +61,3 @@ class Database:
             schema[metric] = m
         return schema
     
-
-if __name__ == "__main__":
-    file = "/Users/mzheng/Work/community-dashboards/dashboards/schema/database.schema_3.jsonc"
-    db: Database = Database(file)
-    schema = db.get_schema(["bytes_server_session_max", "retransmissions_server"], "custom application", "cg13")
-    for metric, s in schema.items():
-        print(f'-------------- metric: {metric} ------------------')
-        m, ip_m = s
-        filter = None
-        for measurement in m: # type: ignore
-            m_name, m_tag = measurement
-            print(f'measurement: {m_name}')
-            arr_alias: List[str] = list()
-            arr_where: List[str] = list()
-            for tag in m_tag:
-                arr_alias.append(f'$tag_{tag}')
-                if filter:
-                    arr_where.append(f'{tag} =~ /^{filter}$/')
-            groupby_sql = ','.join(m_tag)
-            where_sql = ' Or '.join(arr_where)
-            alias_sql = ','.join(arr_alias)
-            print(f'groupby_sql: {groupby_sql}')
-            print(f'where_sql: {where_sql}')
-            print(f'alias_sql: {alias_sql}')
-        print(f'ip_measurements: {ip_m}')

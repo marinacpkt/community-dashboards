@@ -22,7 +22,7 @@
     ]
   },
   "description": "<description>",
-  "editable": false,
+  "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": 1055,

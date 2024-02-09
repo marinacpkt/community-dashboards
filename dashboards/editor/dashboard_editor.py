@@ -77,8 +77,8 @@ def dict_item__replace_value_str_list(
         return element
     for key in keys:
         if key in element.keys():
-            for key, value in mappings:
-                element = dict_item__replace_value_str(element, key, (key, value))
+            for mapping in mappings:
+                element = dict_item__replace_value_str(element, key, mapping)
     return element
 
 # key: value(str|bool|int|float)
@@ -91,8 +91,9 @@ def dict_item__replace_value_str(element: Dict, key, mapping: Tuple[str, str]) -
     str_original = element[key]
     if isinstance(str_original, str):
         element[key] = re.sub(match, sub, str_original)
-    else:
-        element[key] = sub
+    # else:
+        # element[key] = sub
+        # print(f"element[key] is not a string: {element[key]}, key: {key}, mapping: {mapping}, element: {element}")
     return element
 
  # ------------------- dict_dict_<item> operations ------------------------
