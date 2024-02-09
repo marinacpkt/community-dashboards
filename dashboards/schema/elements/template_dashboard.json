@@ -157,8 +157,8 @@
     ]
   },
   "timezone": "",
-  "title": "Application Overview (Flows)",
-  "uid": "flows_overview_by_application",
+  "title": "template",
+  "uid": "template",
   "version": 1,
   "weekStart": ""
 }

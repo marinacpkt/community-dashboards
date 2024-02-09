@@ -12,7 +12,8 @@
                     "ip": [
                         "IP",
                         "Server IP",
-                        "server_ip"
+                        "server_ip",
+                        "Server"
                     ]
                 },
                 "tags": [
@@ -51,7 +52,8 @@
                     "ip": [
                         "IP",
                         "Client IP",
-                        "client_ip"
+                        "client_ip",
+                        "Client"
                     ]
                 },
                 "tags": [
@@ -90,6 +92,7 @@
                     "application_port": [
                         "Nework Port",
                         "Network Application",
+                        "Application Port",
                         "Port",
                         "Port Number"
                     ]

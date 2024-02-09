@@ -1,0 +1,471 @@
+[
+    {
+        "name": "Latency->Response Time",
+        "key": "response_time",
+        "value": "MEAN(\"response_time_s\") as \"Response Time\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Latency->Session Response Time",
+        "key": "session_response_time",
+        "value": "MEAN(\"response_time_s_max\") as \"Session Response Time\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Latency->Round Trip Time",
+        "key": "rtt",
+        "value": "MEAN(\"rtt_client_s\")+MEAN(\"rtt_server_s\") as \"Round Trip Time\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Latency->Server RTT",
+        "key": "rtt_server",
+        "value": "MEAN(\"rtt_server_s\") as \"Server RTT\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Latency->Client Round Trip Time",
+        "key": "rtt_client",
+        "value": "MEAN(\"rtt_client_s\") as \"Client RTT\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Flow Throughput",
+        "key": "flow_throughput",
+        "value": "8*sum(\"bytes\")/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->TCP Throughput",
+        "key": "tcp_throughput",
+        "value": "8*(SUM(\"bytes_server\")+SUM(\"bytes_client\"))/(${__to:date:seconds}-${__from:date:seconds}) as \"Throughput\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Flow Bytes",
+        "key": "flow_bytes",
+        "value": "sum(\"bytes\") as \"Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Flow Packets",
+        "key": "flow_packets",
+        "value": "sum(\"packets\") as \"Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->TCP Bytes",
+        "key": "tcp_bytes",
+        "value": "SUM(\"bytes_server\")+SUM(\"bytes_client\") as \"Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Server Bytes",
+        "key": "bytes_server",
+        "value": "SUM(\"bytes_server\") as \"Server Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Client Bytes",
+        "key": "bytes_client",
+        "value": "SUM(\"bytes_client\") as \"Client Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->TCP Packets",
+        "key": "packets_tcp_packets",
+        "value": "SUM(\"packets_server\")+SUM(\"packets_client\") as \"Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Server Packets",
+        "key": "packets_server",
+        "value": "SUM(\"packets_server\") as \"Server Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Client Packets",
+        "key": "packets_client",
+        "value": "SUM(\"packets_client\") as \"Client Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Session Bytes",
+        "key": "session_bytes",
+        "value": "MAX(\"bytes_client_session_max\")+Max(\"bytes_server_session_max\") as \"Session Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Server Session Bytes",
+        "key": "session_bytes_server",
+        "value": "Max(\"bytes_server_session_max\") as \"Server Session Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Client Session Bytes",
+        "key": "session_bytes_client",
+        "value": "MAX(\"bytes_client_session_max\") as \"Client Session Bytes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Session Packets",
+        "key": "session_packets",
+        "value": "MAX(\"packets_client_session\")+MAX(\"packets_server_session\") as \"Session Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Server Session Packets",
+        "key": "session_packets_server",
+        "value": "MAX(\"packets_server_session\") as \"Server Session Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Client Session Packets",
+        "key": "session_packets_client",
+        "value": "MAX(\"packets_client_session\") as \"Client Session Packets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Flow MTU",
+        "key": "max_mtu",
+        "value": "Max(\"max_mtu\") as \"MTU\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Server MTU",
+        "key": "ts_mtu_server",
+        "value": "Max(\"mtu_server\") as \"Server MTU\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Client MTU",
+        "key": "ts_mtu_client",
+        "value": "Max(\"mtu_client\") as \"Client MTU\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Server Session MTU",
+        "key": "open_mtu_server",
+        "value": "Max(\"mtu_server_session\") as \"Server Session MTU\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Data->Client Session MTU",
+        "key": "open_mtu_client",
+        "value": "Max(\"mtu_client_session\") as \"Client Session MTU\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Fragments->Flow Fragments",
+        "key": "flow_fragments",
+        "value": "sum(\"fragments\") as \"Fragments\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Fragments->TCP Fragments",
+        "key": "tcp_fragments",
+        "value": "SUM(\"fragments_server\")+sum(\"fragments_client\") as \"Fragments\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Fragments->Server Fragments",
+        "key": "fragments_server",
+        "value": "sum(\"fragments_server\") as \"Server Fragments\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Fragments->Client Fragments",
+        "key": "fragments_client",
+        "value": "sum(\"fragments_client\") as \"Client Fragments\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Zero Byte Sessions",
+        "key": "zero_bytes_sessions",
+        "value": "SUM(\"zero_bytes_sessions\") as \"Zero Byte Sessions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Completed Handshakes",
+        "key": "completed_handshakes",
+        "value": "Sum(\"connection_established\") as \"Completed Handshakes\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Finished Sessions",
+        "key": "finished_sessions",
+        "value": "Sum(\"finished_sessions\") as \"Finished Sessions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->New Sessions",
+        "key": "new_sessions",
+        "value": "Sum(\"finished_sessions\") as \"New Sessions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Open Sessions",
+        "key": "open_sessions",
+        "value": "Sum(\"active_sessions\") as \"Open Sessions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Longest Session",
+        "key": "longest_session",
+        "value": "MAX(\"duration_s_max\") as \"Session Duration\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Timeout Sessions",
+        "key": "timeout_sessions",
+        "value": "Sum(\"timeout_sessions\") as \"Timeout Sessions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Connections->Longest Idle",
+        "key": "longest_idle",
+        "value": "Max(\"idle_s\") as \"Session Idle Time\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->SYNs",
+        "key": "syns",
+        "value": "SUM(\"syns\") as \"SYNs\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->SYNACKs",
+        "key": "synacks",
+        "value": "SUM(\"synacks\") as \"SYNACKs\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->FINs",
+        "key": "fins",
+        "value": "SUM(\"fins_client\")+SUM(\"fins_server\") as \"FINs\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->Server FINs",
+        "key": "fins_server",
+        "value": "SUM(\"fins_server\") as \"Server FINs\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->Client FINs",
+        "key": "fins_client",
+        "value": "SUM(\"fins_client\") as \"Client FINs\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->Resets",
+        "key": "resets",
+        "value": "SUM(\"resets_client\")+SUM(\"resets_server\") as \"Resets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->Server Resets",
+        "key": "resets_server",
+        "value": "SUM(\"resets_server\") as \"Server Resets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "TCP Flags->Client Resets",
+        "key": "resets_client",
+        "value": "SUM(\"resets_client\") as \"Client Resets\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Missing SYNs",
+        "key": "missing_syns",
+        "value": "SUM(\"missing_syns\") as \"Missing SYNs\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->SYN Failures",
+        "key": "syn_failures",
+        "value": "SUM(\"syn_failures\") as \"SYN Failures\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Retransmissions",
+        "key": "retransmissions",
+        "value": "SUM(\"retransmissions_client\")+SUM(\"retransmissions_server\") as \"Retransmissions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Server Retransmissions",
+        "key": "retransmissions_server",
+        "value": "SUM(\"retransmissions_server\") as \"Server Retransmissions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Client Retransmissions",
+        "key": "retransmissions_client",
+        "value": "SUM(\"retransmissions_client\") as \"Client Retransmissions\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Duplicates",
+        "key": "duplicates",
+        "value": "SUM(\"duplicates_client\")+SUM(\"duplicates_server\") as \"Duplicates\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Server Duplicates",
+        "key": "duplicates_server",
+        "value": "SUM(\"duplicates_server\") as \"Server Duplicates\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Client Duplicates",
+        "key": "duplicates_client",
+        "value": "SUM(\"duplicates_client\") as \"Client Duplicates\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Gaps",
+        "key": "gaps",
+        "value": "SUM(\"gaps_client\")+SUM(\"gaps_server\") as \"Gaps\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Server Gaps",
+        "key": "gaps_server",
+        "value": "SUM(\"gaps_server\") as \"Server Gaps\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Client Gaps",
+        "key": "gaps_client",
+        "value": "SUM(\"gaps_client\") as \"Client Gaps\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Sequence Errors",
+        "key": "sequence_errors",
+        "value": "SUM(\"sequence_errors_client\")+SUM(\"sequence_errors_server\") as \"Sequence Errors\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Server Sequence Errors",
+        "key": "sequence_errors_server",
+        "value": "SUM(\"sequence_errors_server\") as \"Server Sequence Errors\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Errors->Client Sequence Errors",
+        "key": "sequence_errors_client",
+        "value": "SUM(\"sequence_errors_client\") as \"Client Sequence Errors\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Server Min Win",
+        "key": "min_win_server_session",
+        "value": "MIN(\"min_win_server_session\") AS \"Server Min Win\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Client Min Win",
+        "key": "min_win_client_session",
+        "value": "MIN(\"min_win_client_session\") AS \"Client MinWin\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Server WSS",
+        "key": "wss_server_session",
+        "value": "MIN(\"min_win_server_session\") AS \"Server WSS\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Client WSS",
+        "key": "wss_client_session",
+        "value": "MIN(\"wss_client_session\") AS \"Client WSS\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Zero Windows",
+        "key": "zwins",
+        "value": "SUM(\"zwins_client\")+SUM(\"zwins_server\") as \"Zero Windows\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Server Zero Windows",
+        "key": "zwins_server",
+        "value": "SUM(\"zwins_server\") as \"Server Zero Windows\"",
+        "graph": true,
+        "table": true
+    },
+    {
+        "name": "Memory->Client Zero Windows",
+        "key": "zwins_client",
+        "value": "SUM(\"zwins_client\") as \"Client Zero Windows\"",
+        "graph": true,
+        "table": true
+    }
+]
